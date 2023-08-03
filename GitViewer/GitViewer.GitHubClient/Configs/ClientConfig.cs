@@ -9,6 +9,7 @@ namespace GitViewer.GitHubClient.Configs
     public sealed class ClientConfig
     {
         public const string AppName = "GitViewer";
+        //public const string UserName = "Ocakypa";
         public const string UserName = "igor1251";
         public const string HomeURL = "http://localhost:5063";
         public const string AuthCallbackURL = "http://localhost:5063/authenticate";

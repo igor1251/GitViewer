@@ -16,9 +16,8 @@ namespace GitViewer.GitHubClient.Operators
         {
             var request = new OauthLoginRequest(ClientConfig.ClientID)
             {
-                Scopes = { "read:user", "notifications" },
-                Login = "Ocakupo",
-                AllowSignup = false,
+                Scopes = { "user", "repo", "workflow" },
+                //Login = "Ocakypa"
             };
             var loginUrl = _client.Oauth.GetGitHubLoginUrl(request);
             var link = loginUrl.ToString();
@@ -34,8 +33,9 @@ namespace GitViewer.GitHubClient.Operators
         public async Task<List<string>> GetRepos(string userName)
         {
             var repos = await _client.Repository.GetAllForUser(userName);
-            var commits = new List<string>();
-            return repos.Select(item => item.FullName).ToList();
+            var commits = (await _client.Repository.Commit.GetAll(repos[0].Id)).Select(item => item.Commit.Message).ToList();
+            //return repos.Select(item => item.FullName).ToList();
+            return commits;
         }
     }
 }
