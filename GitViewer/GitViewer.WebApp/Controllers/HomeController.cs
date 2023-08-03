@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
-
 using GitViewer.WebApp.Models;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace GitViewer.WebApp.Controllers
