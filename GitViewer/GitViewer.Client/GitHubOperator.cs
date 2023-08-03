@@ -41,5 +41,16 @@ namespace GitViewer.Client
             var commits = (await _client.Repository.Commit.GetAll(repo.Id)).Where(item => item.Commit.Author.Name == username).Select(item => item.Commit.Message).ToList();
             return commits;
         }
+
+        public async Task<List<string>> SearchOwnerRepo(string owner, string repo)
+        {
+            var result = await _client.Search.SearchRepo(new(repo)
+            {
+                User = owner,
+            });
+            if (result != null)
+                return result.Items.Select(item => item.FullName).ToList();
+            return new();
+        }
     }
 }

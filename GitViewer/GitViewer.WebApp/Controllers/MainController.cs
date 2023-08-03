@@ -38,5 +38,12 @@ namespace GitViewer.WebApp.Controllers
             var commits = await _operator.GetCommits(username, reponame);
             return Ok(string.Join(";\n", commits));
         }
+
+        [Route("search")]
+        public async Task<IActionResult> SearchRepo(string owner, string repo)
+        {
+            var repos = await _operator.SearchOwnerRepo(owner, repo);
+            return Ok(string.Join(";\n", repos));
+        }
     }
 }
