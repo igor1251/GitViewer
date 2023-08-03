@@ -16,7 +16,9 @@ namespace GitViewer.GitHubClient.Operators
         {
             var request = new OauthLoginRequest(ClientConfig.ClientID)
             {
-                Scopes = { "user", "notifications" }
+                Scopes = { "read:user", "notifications" },
+                Login = "Ocakupo",
+                AllowSignup = false,
             };
             var loginUrl = _client.Oauth.GetGitHubLoginUrl(request);
             var link = loginUrl.ToString();
