@@ -1,4 +1,7 @@
 ﻿using System.Diagnostics;
+
+using GitViewer.GitHubClient.Configs;
+using GitViewer.GitHubClient.Operators;
 using GitViewer.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +10,7 @@ namespace GitViewer.WebApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        readonly GitHubOperator _operator = new();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -15,7 +19,21 @@ namespace GitViewer.WebApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return Redirect(_operator.GetLoginUrl());
+        }
+
+        [Route("authenticate")]
+        public IActionResult Authenticate(string code)
+        {
+            _operator.SetOauthToken(code);
+            return Ok($"Recieved code {code}");
+        }
+
+        [Route("repos")]
+        public async Task<IActionResult> GetUserRepos()
+        {
+            var repoList = await _operator.GetRepos(ClientConfig.UserName);
+            return Ok(string.Join(";\n", repoList));
         }
 
         public IActionResult Privacy()
