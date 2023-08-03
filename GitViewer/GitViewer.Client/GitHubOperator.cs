@@ -23,6 +23,15 @@ namespace GitViewer.Client
             return link;
         }
 
+        public async Task<bool> ReloginRequired()
+        {
+            var token = _client.Credentials.GetToken();
+            if (string.IsNullOrEmpty(token))
+                return true;
+            var result = await _client.Authorization.CheckApplicationAuthentication(ClientConfig.ClientID, token);
+            return result == null;
+        }
+
         public void SetOauthToken(string token)
         {
             _client.Credentials = new(token);

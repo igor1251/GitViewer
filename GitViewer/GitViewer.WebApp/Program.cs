@@ -24,7 +24,7 @@ namespace GitViewer.WebApp
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Main}/{action=GetUserRepos}");
+                pattern: "{controller=Main}/{action=Index}");
 
             app.Run();
         }

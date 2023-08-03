@@ -16,6 +16,13 @@ namespace GitViewer.WebApp.Controllers
             _logger = logger;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var reloginRequired = await _operator.ReloginRequired();
+            if (reloginRequired) return Redirect(_operator.GetLoginUrl());
+            else return RedirectToAction("GetUserRepos");
+        }
+
         [Route("authenticate")]
         public IActionResult Authenticate(string code)
         {
@@ -23,7 +30,6 @@ namespace GitViewer.WebApp.Controllers
             return Ok($"Recieved code {code}");
         }
 
-        [Route("")]
         [Route("repos")]
         public async Task<IActionResult> GetUserRepos()
         {
