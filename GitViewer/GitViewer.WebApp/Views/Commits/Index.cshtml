@@ -3,8 +3,6 @@
     ViewData["Title"] = "Git repository commits viewer";
 }
 
-<div class="validation" asp-validation-summary=All></div>
-
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
@@ -16,10 +14,11 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-2 align-self-center">
-                                        <label class="form-label">Owner</label>
+                                        <label class="form-label" asp-for="Owner">Owner</label>
                                     </div>
                                     <div class="col-8 align-self-center">
                                         <input class="form-control" type="text" asp-for="Owner" value=@Model.Owner />
+                                        <span class="text-danger" asp-validation-for="Owner" />
                                     </div>
                                 </div>
                             </div>
@@ -28,10 +27,11 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-2 align-self-center">
-                                        <label class="form-label">Name</label>
+                                        <label class="form-label" asp-for="Repo">Name</label>
                                     </div>
                                     <div class="col-8 align-self-center">
                                         <input class="form-control" type="text" asp-for="Repo" value=@Model.Repo />
+                                        <span class="text-danger" asp-validation-for="Repo" />
                                     </div>
                                 </div>
                             </div>
@@ -40,10 +40,11 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-2 align-self-center">
-                                        <label class="form-label">Login</label>
+                                        <label class="form-label" asp-for="Login">Login</label>
                                     </div>
                                     <div class="col-8 align-self-center">
                                         <input class="form-control" type="text" asp-for="Login" value=@Model.Login />
+                                        <span class="text-danger" asp-validation-for="Login" />
                                     </div>
                                 </div>
                             </div>
@@ -85,3 +86,8 @@
         </div>
     </div>
 </div>
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
