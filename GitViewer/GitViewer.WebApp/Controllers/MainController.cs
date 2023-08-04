@@ -18,9 +18,10 @@ namespace GitViewer.WebApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var reloginRequired = await _operator.ReloginRequired();
-            if (reloginRequired) return Redirect(_operator.GetLoginUrl());
-            else return RedirectToAction("GetUserRepos");
+            //var reloginRequired = await _operator.ReloginRequired();
+            //if (reloginRequired) return Redirect(_operator.GetLoginUrl());
+            //else return RedirectToAction("GetUserRepos");
+            return RedirectToAction("Index", "Commits");
         }
 
         [Route("authenticate")]

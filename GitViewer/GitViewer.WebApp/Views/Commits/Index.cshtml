@@ -5,40 +5,66 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-2">
-            <fieldset>
-                <legend>Search</legend>
-                <form>
-                    <div class="row">
-                        <div>
+        <div class="col-sm-4">
+            <form>
+                <div class="row mb-4">
+                    <fieldset>
+                        <legend>Repository</legend>
+                        <div class="row p-sm-1">
                             <div class="form-group">
-                                <label>:owner</label>
-                                <input class="form-control" type="text" />
+                                <div class="row">
+                                    <div class="col-2 align-self-center">
+                                        <label class="form-label">Owner</label>
+                                    </div>
+                                    <div class="col-8 align-self-center">
+                                        <input class="form-control" type="text" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div>
+                        <div class="row p-sm-1">
                             <div class="form-group">
-                                <label>:repo</label>
-                                <input class="form-control" type="text" />
+                                <div class="row">
+                                    <div class="col-2 align-self-center">
+                                        <label class="form-label">Name</label>
+                                    </div>
+                                    <div class="col-8 align-self-center">
+                                        <input class="form-control" type="text" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div>
+                        <div class="row p-sm-1">
+                            <button class="btn btn-primary w-25" name="action" value="Search">Search</button>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="row mb-4">
+                    <fieldset>
+                        <legend>Comitter</legend>
+                        <div class="row p-sm-1">
                             <div class="form-group">
-                                <button class="btn btn-primary" name="action" value="Search">Search</button>
+                                <div class="row">
+                                    <div class="col-2 align-self-center">
+                                        <label class="form-label">Login</label>
+                                    </div>
+                                    <div class="col-8 align-self-center">
+                                        <input class="form-control" type="text" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </form>
-            </fieldset>
+                        <div class="row p-sm-1 justify-content-between">
+                            <button class="btn btn-primary w-25" name="action" value="Filter">Filter</button>
+                        </div>
+                    </fieldset>
+                </div>
+            </form>
         </div>
         <div class="col-sm-8">
             <fieldset>
                 <legend>Commits</legend>
-                <div class="row">
+                <div class="row p-sm-1">
                     <table class="table">
                         <thead>
                             <tr>
@@ -49,6 +75,12 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
