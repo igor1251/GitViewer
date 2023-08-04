@@ -8,11 +8,12 @@ namespace GitViewer.WebApp.Controllers
 {
     public class MainController : Controller
     {
-        private readonly ILogger<MainController> _logger;
-        readonly GitHubOperator _operator = new();
+        readonly GitHubOperator _gitOperator;
+        readonly ILogger<MainController> _logger;
 
-        public MainController(ILogger<MainController> logger)
+        public MainController(GitHubOperator gitOperator, ILogger<MainController> logger)
         {
+            _gitOperator = gitOperator;
             _logger = logger;
         }
 
@@ -27,7 +28,7 @@ namespace GitViewer.WebApp.Controllers
         [Route("authenticate")]
         public IActionResult Authenticate(string code)
         {
-            _operator.SetOauthToken(code);
+            _gitOperator.SetOauthToken(code);
             //return Ok($"Recieved code {code}");
             return RedirectToAction("Index", "Commits");
         }
@@ -35,7 +36,7 @@ namespace GitViewer.WebApp.Controllers
         [Route("repos")]
         public async Task<IActionResult> GetUserRepos()
         {
-            var repoList = await _operator.GetRepos();
+            var repoList = await _gitOperator.GetRepos();
             return Ok(string.Join(";\n", repoList));
         }
 
@@ -47,11 +48,11 @@ namespace GitViewer.WebApp.Controllers
         //    return Ok(string.Join(";\n", commits));
         //}
 
-        [Route("search")]
-        public async Task<IActionResult> SearchRepo(string owner, string repo)
-        {
-            var repos = await _operator.SearchOwnerRepo(owner, repo);
-            return Ok(string.Join(";\n", repos));
-        }
+        //[Route("search")]
+        //public async Task<IActionResult> SearchRepo(string owner, string repo)
+        //{
+        //    var repos = await _gitOperator.SearchOwnerRepo(owner, repo);
+        //    return Ok(string.Join(";\n", repos));
+        //}
     }
 }

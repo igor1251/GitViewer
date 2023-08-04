@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
-            <form>
+            <form asp-action="Search" asp-controller="Commits">
                 <div class="row mb-4">
                     <fieldset>
                         <legend>Repository</legend>
@@ -17,7 +17,7 @@
                                         <label class="form-label">Owner</label>
                                     </div>
                                     <div class="col-8 align-self-center">
-                                        <input class="form-control" type="text" />
+                                        <input class="form-control" type="text" asp-for="Owner" value=@Model.Owner />
                                     </div>
                                 </div>
                             </div>
@@ -29,19 +29,11 @@
                                         <label class="form-label">Name</label>
                                     </div>
                                     <div class="col-8 align-self-center">
-                                        <input class="form-control" type="text" />
+                                        <input class="form-control" type="text" asp-for="Repo" value=@Model.Repo />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row p-sm-1">
-                            <button class="btn btn-primary w-25" name="action" value="Search">Search</button>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="row mb-4">
-                    <fieldset>
-                        <legend>Comitter</legend>
                         <div class="row p-sm-1">
                             <div class="form-group">
                                 <div class="row">
@@ -49,13 +41,13 @@
                                         <label class="form-label">Login</label>
                                     </div>
                                     <div class="col-8 align-self-center">
-                                        <input class="form-control" type="text" />
+                                        <input class="form-control" type="text" asp-for="Login" value=@Model.Login />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row p-sm-1 justify-content-between">
-                            <button class="btn btn-primary w-25" name="action" value="Filter">Filter</button>
+                        <div class="row p-sm-1">
+                            <button class="btn btn-primary w-25" name="action" value="SearchRepo">Search</button>
                         </div>
                     </fieldset>
                 </div>
@@ -75,12 +67,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                            </tr>
+                            @foreach (var item in Model.Commits)
+                            {
+                                <tr>
+                                    <td>@item.timestamp</td>
+                                    <td>@item.author</td>
+                                    <td>@item.comment</td>
+                                    <td>@item.description</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>

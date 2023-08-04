@@ -51,15 +51,26 @@ namespace GitViewer.Client
             return commits;
         }
 
-        public async Task<List<string>> SearchOwnerRepo(string owner, string repo)
+        public async Task<List<(string timestamp, string author, string comment, string description)>> SearchOwnerRepo(string owner, string repo, string login)
         {
             var result = await _client.Search.SearchRepo(new(repo)
             {
                 User = owner,
             });
+
+            var response = new List<(string timestamp, string author, string comment, string description)>();
+
             if (result != null)
-                return result.Items.Select(item => item.FullName).ToList();
-            return new();
+            {
+                foreach (var item in result.Items)
+                {
+                    var commits = await GetCommits(login, item.Name);
+                    foreach (var commit in commits)
+                        response.Add(new(DateTime.Now.ToString(), login, commit, "test"));
+                }
+            }
+            
+            return response;
         }
     }
 }
