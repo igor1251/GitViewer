@@ -25,19 +25,22 @@ namespace GitViewer.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Search(CommitsViewModel model, string action)
         {
-            switch (action)
+            if (ModelState.IsValid)
             {
-                case "SearchRepo":
-                    var owner = model.Owner;
-                    var repo = model.Repo;
-                    var login = model.Login;
-                    var searchResult = await _gitOperator.SearchOwnerRepo(owner, repo, login);
-                    foreach (var item in searchResult)
-                        model.Commits.Add(item);
-                    break;
-                case "FilterByUser":
+                switch (action)
+                {
+                    case "SearchRepo":
+                        var owner = model.Owner;
+                        var repo = model.Repo;
+                        var login = model.Login;
+                        var searchResult = await _gitOperator.SearchOwnerRepo(owner, repo, login);
+                        foreach (var item in searchResult)
+                            model.Commits.Add(item);
+                        break;
+                    case "FilterByUser":
 
-                    break;
+                        break;
+                }
             }
             return View("Index", model);
         }
