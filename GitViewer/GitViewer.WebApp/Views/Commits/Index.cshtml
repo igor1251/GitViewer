@@ -1,0 +1,58 @@
+﻿@model CommitsViewModel
+@{
+    ViewData["Title"] = "Git repository commits viewer";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-2">
+            <fieldset>
+                <legend>Search</legend>
+                <form>
+                    <div class="row">
+                        <div>
+                            <div class="form-group">
+                                <label>:owner</label>
+                                <input class="form-control" type="text" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <div class="form-group">
+                                <label>:repo</label>
+                                <input class="form-control" type="text" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <div class="form-group">
+                                <button class="btn btn-primary" name="action" value="Search">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </fieldset>
+        </div>
+        <div class="col-sm-8">
+            <fieldset>
+                <legend>Commits</legend>
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Author</th>
+                                <th>Comment</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

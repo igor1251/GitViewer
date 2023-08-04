@@ -27,7 +27,8 @@ namespace GitViewer.WebApp.Controllers
         public IActionResult Authenticate(string code)
         {
             _operator.SetOauthToken(code);
-            return Ok($"Recieved code {code}");
+            //return Ok($"Recieved code {code}");
+            return RedirectToAction("Index", "Commits");
         }
 
         [Route("repos")]
@@ -37,13 +38,13 @@ namespace GitViewer.WebApp.Controllers
             return Ok(string.Join(";\n", repoList));
         }
 
-        [Route("commits")]
-        public async Task<OkObjectResult> GetUserCommits(string username, string reponame)
-        {
-            //пример вызова http://localhost:5063/commits?username=igor1251&reponame=Web
-            var commits = await _operator.GetCommits(username, reponame);
-            return Ok(string.Join(";\n", commits));
-        }
+        //[Route("commits")]
+        //public async Task<OkObjectResult> GetUserCommits(string username, string reponame)
+        //{
+        //    //пример вызова http://localhost:5063/commits?username=igor1251&reponame=Web
+        //    var commits = await _operator.GetCommits(username, reponame);
+        //    return Ok(string.Join(";\n", commits));
+        //}
 
         [Route("search")]
         public async Task<IActionResult> SearchRepo(string owner, string repo)
