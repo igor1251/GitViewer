@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GitViewer.GitHubClient.Configs
+namespace GitViewer.GitStorage.Remote
 {
     public sealed class ClientConfig
     {

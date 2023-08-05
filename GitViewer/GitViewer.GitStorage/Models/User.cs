@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GitViewer.DAL.Models
+namespace GitViewer.GitStorage.Models
 {
     public class User
     {
+        public long Id { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

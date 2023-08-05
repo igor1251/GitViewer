@@ -1,4 +1,4 @@
-﻿using GitViewer.Client;
+﻿using GitViewer.GitStorage;
 using GitViewer.WebApp.Models;
 
 using Microsoft.AspNetCore.Mvc;
@@ -7,12 +7,12 @@ namespace GitViewer.WebApp.Controllers
 {
     public class CommitsController : Controller
     {
-        readonly GitHubOperator _gitOperator;
+        readonly GitStorageFasade _gitStorage;
         readonly ILogger<CommitsController> _logger;
 
-        public CommitsController(GitHubOperator gitOperator, ILogger<CommitsController> logger)
+        public CommitsController(GitStorageFasade gitStorage, ILogger<CommitsController> logger)
         {
-            _gitOperator = gitOperator;
+            _gitStorage = gitStorage;
             _logger = logger;
         }
 
@@ -29,11 +29,11 @@ namespace GitViewer.WebApp.Controllers
             {
                 switch (action)
                 {
-                    case "SearchRepo":
+                    case "search":
                         var owner = model.Owner;
                         var repo = model.Repo;
                         var login = model.Login;
-                        var searchResult = await _gitOperator.SearchOwnerRepo(owner, repo, login);
+                        var searchResult = await _gitStorage.GetCommitsAsync(owner, repo, login);
                         foreach (var item in searchResult)
                             model.Commits.Add(item);
                         break;

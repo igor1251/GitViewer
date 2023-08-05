@@ -1,23 +1,24 @@
 ﻿using System.Diagnostics;
 
-using GitViewer.Client;
+using GitViewer.GitStorage;
+using GitViewer.GitStorage.Local;
 using GitViewer.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GitViewer.WebApp.Controllers
 {
-    public class MainController : Controller
+    public class AuthController : Controller
     {
-        readonly GitHubOperator _gitOperator;
-        readonly ILogger<MainController> _logger;
+        readonly GitStorageFasade _gitStorage;
+        readonly ILogger<AuthController> _logger;
 
-        public MainController(GitHubOperator gitOperator, ILogger<MainController> logger)
+        public AuthController(GitStorageFasade gitStorage, ILogger<AuthController> logger)
         {
-            _gitOperator = gitOperator;
+            _gitStorage = gitStorage;
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             //var reloginRequired = await _operator.ReloginRequired();
             //if (reloginRequired) return Redirect(_operator.GetLoginUrl());
@@ -28,17 +29,17 @@ namespace GitViewer.WebApp.Controllers
         [Route("authenticate")]
         public IActionResult Authenticate(string code)
         {
-            _gitOperator.SetOauthToken(code);
+            _gitStorage.SetOauthToken(code);
             //return Ok($"Recieved code {code}");
             return RedirectToAction("Index", "Commits");
         }
 
-        [Route("repos")]
-        public async Task<IActionResult> GetUserRepos()
-        {
-            var repoList = await _gitOperator.GetRepos();
-            return Ok(string.Join(";\n", repoList));
-        }
+        //[Route("repos")]
+        //public async Task<IActionResult> GetUserRepos()
+        //{
+        //    var repoList = await _gitLocalStorage.GetRepositoriesAsync();
+        //    return Ok(string.Join(";\n", repoList.Select(item => item.Name)));
+        //}
 
         //[Route("commits")]
         //public async Task<OkObjectResult> GetUserCommits(string username, string reponame)

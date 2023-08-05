@@ -50,7 +50,7 @@
                             </div>
                         </div>
                         <div class="row p-sm-1">
-                            <button class="btn btn-primary w-25" name="action" value="SearchRepo">Search</button>
+                            <button class="btn btn-primary w-25" name="action" value="search">Search</button>
                         </div>
                     </fieldset>
                 </div>
@@ -63,20 +63,18 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Timestamp</th>
-                                <th>Author</th>
                                 <th>Comment</th>
                                 <th>Description</th>
+                                <th>Author</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.Commits)
                             {
                                 <tr>
-                                    <td>@item.timestamp</td>
-                                    <td>@item.author</td>
-                                    <td>@item.comment</td>
-                                    <td>@item.description</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.Author?.Name</td>
                                 </tr>
                             }
                         </tbody>

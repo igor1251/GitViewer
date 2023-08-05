@@ -1,4 +1,6 @@
-using GitViewer.Client;
+using GitViewer.GitStorage;
+using GitViewer.GitStorage.Local;
+using GitViewer.GitStorage.Remote;
 
 namespace GitViewer.WebApp
 {
@@ -10,7 +12,10 @@ namespace GitViewer.WebApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddSingleton<GitHubOperator>();
+            builder.Services.AddSingleton<GitLocalStorageDbContext>();
+            builder.Services.AddSingleton<GitRemoteStorage>();
+            builder.Services.AddSingleton<GitLocalStorage>();
+            builder.Services.AddSingleton<GitStorageFasade>();
 
             var app = builder.Build();
 
@@ -27,7 +32,7 @@ namespace GitViewer.WebApp
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Main}/{action=Index}");
+                pattern: "{controller=Auth}/{action=Index}");
 
             app.Run();
         }
