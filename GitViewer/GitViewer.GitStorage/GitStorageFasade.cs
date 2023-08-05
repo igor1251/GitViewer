@@ -31,6 +31,8 @@ namespace GitViewer.GitStorage
         /// <param name="token">токен, полученный при авторизации</param>
         public void SetOauthToken(string token) => _remoteStorage.SetOauthToken(token);
         
+        public string GetLoginUrl() => _remoteStorage.GetLoginUrl();
+
         /// <summary>
         /// Поиск коммитов
         /// </summary>
@@ -51,17 +53,6 @@ namespace GitViewer.GitStorage
                 return await GetCommitsAsync(owner, repo, login);
             }
             else return response;
-        }
-
-        /// <summary>
-        /// Загружает список репозиториев пользователя из аккаунта на GitHub
-        /// </summary>
-        /// <param name="owner">владелец репозитория</param>
-        /// <returns>task для ожидания</returns>
-        public async Task FetchRepositoriesAsync(string owner)
-        {
-            var remoteRepos = await _remoteStorage.GetRepositoriesAsync(owner);
-            remoteRepos.ForEach(async repo => await _localStorage.AddRepositoryAsync(repo));
         }
 
         /// <summary>

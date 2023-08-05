@@ -22,7 +22,7 @@ namespace GitViewer.WebApp.Controllers
         {
             //var reloginRequired = await _operator.ReloginRequired();
             //if (reloginRequired) return Redirect(_operator.GetLoginUrl());
-            //else return RedirectToAction("GetUserRepos");
+            //return Redirect(_gitStorage.GetLoginUrl());
             return RedirectToAction("Index", "Commits");
         }
 
@@ -30,7 +30,7 @@ namespace GitViewer.WebApp.Controllers
         public IActionResult Authenticate(string code)
         {
             _gitStorage.SetOauthToken(code);
-            //return Ok($"Recieved code {code}");
+            _logger.LogInformation($"Recieved API-key {code}");
             return RedirectToAction("Index", "Commits");
         }
 

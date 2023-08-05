@@ -39,25 +39,6 @@ namespace GitViewer.GitStorage.Remote
             _client.Credentials = new(token);
         }
 
-        public async Task<List<Models.Repository>> GetRepositoriesAsync(string owner)
-        {
-            var remoteRepos = await _client.Repository.GetAllForUser(owner);
-            var repos = new List<Models.Repository>();
-            
-            foreach (var item in remoteRepos)
-            {
-                var localRepo = new Models.Repository
-                {
-                    Name = item.Name,
-                    Owner = new Models.User() { Name = item.Owner.Login },
-                    Commits = await GetCommitsAsync(owner, item.Name)
-                };
-                repos.Add(localRepo);
-            }
-            
-            return repos;
-        }
-
         public async Task<List<Models.Commit>> GetCommitsAsync(string owner, string repo, string? login = null)
         {
             var remoteRepo = await _client.Repository.Get(owner, repo);
