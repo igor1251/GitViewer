@@ -70,7 +70,7 @@ namespace GitViewer.GitStorage.Remote
             var commits = (await _client.Repository.Commit.GetAll(remoteRepo.Id, request)).Select(item => new Models.Commit()
             {
                 Name = item.Commit.Message,
-                Description = item.Commit.Message,
+                Date = item.Commit.Author.Date.DateTime,
                 Author = new Models.User() { Name = item.Commit.Author.Name },
                 Repository = new Models.Repository()
                 {

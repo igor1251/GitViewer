@@ -12,7 +12,7 @@ namespace GitViewer.WebApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddSingleton<GitLocalStorageDbContext>();
+            builder.Services.AddDbContext<GitLocalStorageDbContext>(ServiceLifetime.Singleton);
             builder.Services.AddSingleton<GitRemoteStorage>();
             builder.Services.AddSingleton<GitLocalStorage>();
             builder.Services.AddSingleton<GitStorageFasade>();

@@ -19,7 +19,34 @@ namespace GitViewer.GitStorage.Local
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=gitdb;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=gitcommitsdb;Trusted_Connection=True;");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Commit>()
+                .HasOne(c => c.Author)
+                .WithMany(u => u.Commits);
+
+            modelBuilder.Entity<Commit>()
+                .HasOne(c => c.Repository)
+                .WithMany(r => r.Commits);
+
+            modelBuilder.Entity<Repository>()
+                .HasOne(r => r.Owner)
+                .WithMany(u => u.Repositories);
+
+            modelBuilder.Entity<Repository>()
+                .HasMany(r => r.Commits)
+                .WithOne(c => c.Repository);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Repositories)
+                .WithOne(r => r.Owner);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Commits)
+                .WithOne(c => c.Author);
         }
     }
 }

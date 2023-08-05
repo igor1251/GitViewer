@@ -27,6 +27,17 @@ namespace GitViewer.GitStorage.Local
 
         public async Task AddCommitAsync(List<Commit> commits)
         {
+            foreach (var commit in commits)
+            {
+                var author = commit.Author ?? throw new Exception("author can't be null");
+                if (await _dbContext.Users.AnyAsync(item => item.Name == author.Name))
+                    commit.Author = await _dbContext.Users.FirstAsync(item => item.Name == author.Name);
+
+                var repository = commit.Repository ?? throw new Exception("repository can't be null");
+                if (await _dbContext.Repositories.AnyAsync(item => item.RemoteId == repository.RemoteId))
+                    commit.Repository = await _dbContext.Repositories.FirstAsync(item => item.RemoteId == repository.RemoteId);
+            }
+
             await _dbContext.Commits.AddRangeAsync(commits);
             await _dbContext.SaveChangesAsync();
         }
