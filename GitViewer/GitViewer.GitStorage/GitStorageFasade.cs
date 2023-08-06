@@ -8,6 +8,7 @@ using GitViewer.GitStorage.Local;
 using GitViewer.GitStorage.Models;
 using GitViewer.GitStorage.Remote;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace GitViewer.GitStorage
@@ -69,5 +70,11 @@ namespace GitViewer.GitStorage
             _logger.LogInformation($"Done. Adding search result in localStorage");
             await _localStorage.AddCommitAsync(remoteCommits);
         }
+
+        public async Task AddRemoteStorageConfig(RemoteStorageConfig config) => 
+            await _localStorage.AddRemoteStorageConfigAsync(config);
+
+        public async Task<RemoteStorageConfig?> GetRemoteStorageConfigAsync() =>
+            await _localStorage.GetRemoteStorageConfigAsync();
     }
 }

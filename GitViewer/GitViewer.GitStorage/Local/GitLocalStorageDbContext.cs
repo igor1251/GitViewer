@@ -13,7 +13,7 @@ namespace GitViewer.GitStorage.Local
         public DbSet<User> Users { get; set; }
         public DbSet<Commit> Commits { get; set; }
         public DbSet<Repository> Repositories { get; set; }
-        public DbSet<Settings> Settings { get; set; }
+        public DbSet<RemoteStorageConfig> RemoteStorageConfigs { get; set; }
 
         public GitLocalStorageDbContext() => Database.EnsureCreated();
 

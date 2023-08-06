@@ -37,9 +37,6 @@ namespace GitViewer.WebApp.Controllers
                         foreach (var item in searchResult)
                             model.Commits.Add(item);
                         break;
-                    case "FilterByUser":
-
-                        break;
                 }
             }
             return View("Index", model);

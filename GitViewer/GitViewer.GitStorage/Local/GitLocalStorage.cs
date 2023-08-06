@@ -69,11 +69,14 @@ namespace GitViewer.GitStorage.Local
             return commits;
         }
         
-        public async Task AddSettingsAsync(Settings settings)
+        public async Task AddRemoteStorageConfigAsync(RemoteStorageConfig config)
         {
-            if (await _dbContext.Settings.AnyAsync()) await _dbContext.Settings.ExecuteDeleteAsync();
-            await _dbContext.Settings.AddAsync(settings);
+            await _dbContext.RemoteStorageConfigs.ExecuteDeleteAsync();
+            await _dbContext.RemoteStorageConfigs.AddAsync(config);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<RemoteStorageConfig?> GetRemoteStorageConfigAsync() =>
+            await _dbContext.RemoteStorageConfigs.FirstOrDefaultAsync();
     }
 }

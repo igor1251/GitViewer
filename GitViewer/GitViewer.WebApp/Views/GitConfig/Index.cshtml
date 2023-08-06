@@ -1,0 +1,76 @@
+﻿@model GitConfigViewModel
+@{
+    ViewData["Title"] = "GitHub API configuration";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <form asp-action="Search" asp-controller="Commits">
+                <div class="row mb-4">
+                    <fieldset>
+                        <legend>GitHub API configuration</legend>
+                        <div class="row p-sm-1">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-3 align-self-center">
+                                        <label class="form-label" asp-for="ClientId">CLientID</label>
+                                    </div>
+                                    <div class="col-8 align-self-center">
+                                        <input class="form-control" type="text" asp-for="ClientId" value=@Model.ClientId />
+                                        <span class="text-danger" asp-validation-for="ClientId" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row p-sm-1">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-3 align-self-center">
+                                        <label class="form-label" asp-for="ClientSecret">ClientSecret</label>
+                                    </div>
+                                    <div class="col-8 align-self-center">
+                                        <input class="form-control" type="text" asp-for="ClientSecret" value=@Model.ClientSecret />
+                                        <span class="text-danger" asp-validation-for="ClientSecret" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row p-sm-1">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-3 align-self-center">
+                                        <label class="form-label" asp-for="Login">Login</label>
+                                    </div>
+                                    <div class="col-8 align-self-center">
+                                        <input class="form-control" type="text" asp-for="Login" value=@Model.Login />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row p-sm-1">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-3 align-self-center">
+                                        <label class="form-label" asp-for="Password">Password</label>
+                                    </div>
+                                    <div class="col-8 align-self-center">
+                                        <input class="form-control" type="text" asp-for="Password" value=@Model.Password />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row p-sm-1">
+                            <button class="btn btn-primary w-25" name="action" value="save">Save</button>
+                        </div>
+                    </fieldset>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
