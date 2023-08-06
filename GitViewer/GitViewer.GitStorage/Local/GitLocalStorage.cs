@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GitViewer.GitStorage.Models;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace GitViewer.GitStorage.Local
@@ -29,21 +28,36 @@ namespace GitViewer.GitStorage.Local
         {
             foreach (var commit in commits)
             {
-                if (!await _dbContext.Repositories.AnyAsync(item => item.RemoteId == commit.Repository.RemoteId))
-                    await _dbContext.Repositories.AddAsync(commit.Repository);
-                if (!await _dbContext.Users.AnyAsync(item => item.Name == commit.Author.Name))
-                    await _dbContext.Users.AddAsync(commit.Author);
+                commit.Repository = await AddRepositoryAsync(commit.Repository ?? throw new Exception("Repository can't be null"));
+                commit.Author = await AddUserAsync(commit.Author ?? throw new Exception("Author can't be null"));
             }
 
             await _dbContext.Commits.AddRangeAsync(commits);
             await _dbContext.SaveChangesAsync();
         }
         
-        public async Task AddRepositoryAsync(Repository repository)
+        async Task<User> AddUserAsync(User user)
         {
-            if (repository.Owner == null) throw new Exception("owner can't be null");
-            await _dbContext.Repositories.AddAsync(repository);
+            if (await _dbContext.Users.AnyAsync(item => item.Name == user.Name))
+                return await _dbContext.Users.FirstAsync(item => item.Name == user.Name);
+
+            var addedEntity = await _dbContext.Users.AddAsync(user);
             await _dbContext.SaveChangesAsync();
+
+            return addedEntity.Entity;
+        }
+
+        async Task<Repository> AddRepositoryAsync(Repository repository)
+        {
+            repository.Owner = await AddUserAsync(repository.Owner ?? throw new Exception("Owner can't be null"));
+            
+            if (await _dbContext.Repositories.AnyAsync(item => item.RemoteId == repository.RemoteId))
+                return await _dbContext.Repositories.FirstAsync(item => item.RemoteId == repository.RemoteId);
+            
+            var addedEntity = await _dbContext.Repositories.AddAsync(repository);
+            await _dbContext.SaveChangesAsync();
+            
+            return addedEntity.Entity;
         }
 
         public async Task<List<Commit>> GetCommitsAsync(string owner, string repo, string name)
