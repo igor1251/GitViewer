@@ -18,42 +18,29 @@ namespace GitViewer.WebApp.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            //var reloginRequired = await _operator.ReloginRequired();
-            //if (reloginRequired) return Redirect(_operator.GetLoginUrl());
-            //return Redirect(_gitStorage.GetLoginUrl());
-            return RedirectToAction("Index", "Commits");
+            var remoteStorageConfig = await _gitStorage.GetRemoteStorageConfigAsync();
+
+            if (remoteStorageConfig != null)
+            {
+                if (remoteStorageConfig.TokenNotSet) return Redirect(await _gitStorage.GetLoginUrlAsync());
+                else return RedirectToAction("Index", "Commits");
+            }
+
+            return RedirectToAction("Index", "GitConfig");
         }
 
         [Route("authenticate")]
-        public IActionResult Authenticate(string code)
+        public async Task<IActionResult> Authenticate(string code)
         {
-            _gitStorage.SetOauthToken(code);
+            var config = await _gitStorage.GetRemoteStorageConfigAsync() ?? throw new Exception("invalid gitApi configuration");
+            config.Token = code;
+            await _gitStorage.UpdateRemoteStorageConfig(config);
+            
             _logger.LogInformation($"Recieved API-key {code}");
+            
             return RedirectToAction("Index", "Commits");
         }
-
-        //[Route("repos")]
-        //public async Task<IActionResult> GetUserRepos()
-        //{
-        //    var repoList = await _gitLocalStorage.GetRepositoriesAsync();
-        //    return Ok(string.Join(";\n", repoList.Select(item => item.Name)));
-        //}
-
-        //[Route("commits")]
-        //public async Task<OkObjectResult> GetUserCommits(string username, string reponame)
-        //{
-        //    //пример вызова http://localhost:5063/commits?username=igor1251&reponame=Web
-        //    var commits = await _operator.GetCommits(username, reponame);
-        //    return Ok(string.Join(";\n", commits));
-        //}
-
-        //[Route("search")]
-        //public async Task<IActionResult> SearchRepo(string owner, string repo)
-        //{
-        //    var repos = await _gitOperator.SearchOwnerRepo(owner, repo);
-        //    return Ok(string.Join(";\n", repos));
-        //}
     }
 }

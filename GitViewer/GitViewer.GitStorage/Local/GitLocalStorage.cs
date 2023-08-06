@@ -76,6 +76,20 @@ namespace GitViewer.GitStorage.Local
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task UpdateRemoteStorageConfigAsync(RemoteStorageConfig config)
+        {
+            var currenctConfig = await _dbContext.RemoteStorageConfigs.FirstOrDefaultAsync();
+            if (currenctConfig != null)
+            {
+                currenctConfig.Login = config.Login;
+                currenctConfig.ClientSecret = config.ClientSecret;
+                currenctConfig.Token = config.Token;
+                currenctConfig.ClientId = config.ClientId;
+            }
+            else await _dbContext.RemoteStorageConfigs.AddAsync(config);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<RemoteStorageConfig?> GetRemoteStorageConfigAsync() =>
             await _dbContext.RemoteStorageConfigs.FirstOrDefaultAsync();
     }

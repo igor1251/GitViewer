@@ -36,8 +36,8 @@ namespace GitViewer.WebApp.Controllers
                             ClientId = model.ClientId,
                             ClientSecret = model.ClientSecret,
                         };
-                        await _gitStorage.AddRemoteStorageConfig(config);
-                        break;
+                        await _gitStorage.UpdateRemoteStorageConfig(config);
+                        return RedirectToAction("Index", "Auth");
                 }
             }
             return View("Index", model);

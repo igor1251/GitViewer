@@ -26,13 +26,11 @@ namespace GitViewer.GitStorage
             _logger = logger;
         }
 
-        /// <summary>
-        /// Настройка токена для связи с GitHub API
-        /// </summary>
-        /// <param name="token">токен, полученный при авторизации</param>
-        public void SetOauthToken(string token) => _remoteStorage.SetOauthToken(token);
-        
-        public string GetLoginUrl() => _remoteStorage.GetLoginUrl();
+        public async Task<string> GetLoginUrlAsync()
+        {
+            _remoteStorage.SetConfig(await _localStorage.GetRemoteStorageConfigAsync() ?? throw new Exception("GitHubAPI config was null"));
+            return _remoteStorage.GetLoginUrl();
+        }
 
         /// <summary>
         /// Поиск коммитов
@@ -73,6 +71,12 @@ namespace GitViewer.GitStorage
 
         public async Task AddRemoteStorageConfig(RemoteStorageConfig config) => 
             await _localStorage.AddRemoteStorageConfigAsync(config);
+
+        public async Task UpdateRemoteStorageConfig(RemoteStorageConfig config)
+        {
+            await _localStorage.UpdateRemoteStorageConfigAsync(config);
+            _remoteStorage.SetConfig(await _localStorage.GetRemoteStorageConfigAsync() ?? throw new Exception("GitHubAPI config was null"));
+        }
 
         public async Task<RemoteStorageConfig?> GetRemoteStorageConfigAsync() =>
             await _localStorage.GetRemoteStorageConfigAsync();

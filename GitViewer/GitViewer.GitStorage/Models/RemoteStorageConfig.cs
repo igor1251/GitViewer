@@ -16,6 +16,10 @@ namespace GitViewer.GitStorage.Models
         public string? Login { get; set; }
         public string? Password { get; set; }
         public string Token { get; set; } = string.Empty;
+        
         public bool OnlyTokenAuthAllowed => string.IsNullOrEmpty(Login) || string.IsNullOrEmpty(Password);
+
+        public bool Empty => string.IsNullOrEmpty(Token) && string.IsNullOrEmpty(ClientId);
+        public bool TokenNotSet => string.IsNullOrEmpty(Token);
     }
 }

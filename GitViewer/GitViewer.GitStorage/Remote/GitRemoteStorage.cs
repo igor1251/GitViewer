@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,16 +12,23 @@ namespace GitViewer.GitStorage.Remote
 {
     public class GitRemoteStorage
     {
-        readonly GitHubClient _client = new(new ProductHeaderValue(ClientConfig.AppName))
-        {
-            Credentials = new("babichew.i@yandex.ru", "Dark_Angel1997")
-        };
+        readonly GitHubClient _client = new(new ProductHeaderValue(Path.GetFileName(Process.GetCurrentProcess().MainModule?.FileName ?? "yeah")));
 
         RemoteStorageConfig? _config;
 
-        //string CLIENT_ID => _config?.ClientId ?? throw new Exception("ClientId can't be null");
-        string CLIENT_ID => ClientConfig.ClientID;
+        string CLIENT_ID => _config?.ClientId ?? throw new Exception("ClientId can't be null");
 
+        public void SetConfig(RemoteStorageConfig config)
+        {
+            _config = config;
+            if (_config != null)
+            {
+                if (!_config.OnlyTokenAuthAllowed)
+                    _client.Credentials = new(_config.Login, _config.Password);
+                else if (!_config.TokenNotSet) 
+                    _client.Credentials = new(_config.Token);
+            }
+        }
 
         public string GetLoginUrl()
         {
@@ -32,15 +40,6 @@ namespace GitViewer.GitStorage.Remote
             var link = loginUrl.ToString();
 
             return link;
-        }
-
-        public async Task<bool> ReloginRequired()
-        {
-            var token = _client.Credentials.GetToken();
-            if (string.IsNullOrEmpty(token))
-                return true;
-            var result = await _client.Authorization.CheckApplicationAuthentication(CLIENT_ID, token);
-            return result == null;
         }
 
         public void SetOauthToken(string token)
