@@ -1,0 +1,15 @@
+﻿@model SelectableCommitEditorViewModel
+<tr>
+    <td class="align-self-center mx-sm-2">
+        @Html.CheckBoxFor(model => model.Selected)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Commit.Date)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Commit.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Commit.Author.Name)
+    </td>
+</tr>

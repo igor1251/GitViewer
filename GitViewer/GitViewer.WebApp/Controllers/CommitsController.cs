@@ -16,9 +16,30 @@ namespace GitViewer.WebApp.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            if (!await _gitStorage.CheckRemoteStorageConfig())
+                return RedirectToAction("Index", "Auth");
             return View(new CommitsViewModel());
+        }
+
+        async Task FillCommitsAsync(CommitsViewModel model, bool needSyncWithRemote = false)
+        {
+            if (model.Commits.Any()) model.Commits.Clear();
+
+            var owner = model.Owner;
+            var repo = model.Repo;
+            var login = model.Login;
+
+            if (needSyncWithRemote) await _gitStorage.FetchCommitsAsync(owner, repo, login);
+
+            var searchResult = await _gitStorage.GetCommitsAsync(owner, repo, login);
+            foreach (var item in searchResult)
+                model.Commits.Add(new()
+                {
+                    Selected = false,
+                    Commit = item
+                });
         }
 
         [HttpPost]
@@ -30,12 +51,13 @@ namespace GitViewer.WebApp.Controllers
                 switch (action)
                 {
                     case "search":
-                        var owner = model.Owner;
-                        var repo = model.Repo;
-                        var login = model.Login;
-                        var searchResult = await _gitStorage.GetCommitsAsync(owner, repo, login);
-                        foreach (var item in searchResult)
-                            model.Commits.Add(item);
+                        await FillCommitsAsync(model);
+                        break;
+                    case "fetch":
+                        await FillCommitsAsync(model, true);
+                        break;
+                    case "delete":
+
                         break;
                 }
             }

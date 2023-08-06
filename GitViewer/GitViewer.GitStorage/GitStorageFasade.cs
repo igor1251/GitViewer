@@ -32,6 +32,12 @@ namespace GitViewer.GitStorage
             return _remoteStorage.GetLoginUrl();
         }
 
+        public async Task<bool> CheckRemoteStorageConfig()
+        {
+            var config = await _localStorage.GetRemoteStorageConfigAsync();
+            return !config?.TokenNotSet ?? false;
+        }
+
         /// <summary>
         /// Поиск коммитов
         /// </summary>

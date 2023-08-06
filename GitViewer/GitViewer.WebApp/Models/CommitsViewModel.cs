@@ -15,6 +15,6 @@ namespace GitViewer.WebApp.Models
         [Required(ErrorMessage = "User login can't be null")]
         public string Login { get; set; } = string.Empty;
 
-        public List<Commit> Commits { get; set; } = new();
+        public List<SelectableCommitEditorViewModel> Commits { get; set; } = new();
     }
 }

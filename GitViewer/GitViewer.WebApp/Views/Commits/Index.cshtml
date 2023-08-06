@@ -3,10 +3,10 @@
     ViewData["Title"] = "Git repository commits viewer";
 }
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-4">
-            <form asp-action="Search" asp-controller="Commits">
+<form asp-action="Search" asp-controller="Commits">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
                 <div class="row mb-4">
                     <fieldset>
                         <legend>Repository</legend>
@@ -50,40 +50,38 @@
                             </div>
                         </div>
                         <div class="row p-sm-1">
-                            <button class="btn btn-primary w-25" name="action" value="search">Search</button>
+                            <button class="btn btn-primary w-25 mx-sm-1" name="action" value="search">Search</button>
                         </div>
                     </fieldset>
                 </div>
-            </form>
-        </div>
-        <div class="col-sm-8">
-            <fieldset>
-                <legend>Commits</legend>
-                <div class="row p-sm-1">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Timestamp</th>
-                                <th>Description</th>
-                                <th>Author</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Commits)
-                            {
+            </div>
+            <div class="col-sm-8">
+                <fieldset>
+                    <legend>Commits</legend>
+                    <div class="row mb-4">
+                        <button class="btn btn-primary w-25 mx-sm-1" name="action" value="fetch">Fetch</button>
+                        <button class="btn btn-danger w-25 mx-sm-1" name="action" value="delete">Delete</button>
+                    </div>
+                    <div class="row p-sm-1">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td>@item.Date</td>
-                                    <td>@item.Name</td>
-                                    <td>@item.Author?.Name</td>
+                                    <th>#</th>
+                                    <th>Timestamp</th>
+                                    <th>Description</th>
+                                    <th>Author</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </fieldset>
+                            </thead>
+                            <tbody>
+                                @Html.EditorFor(model => model.Commits)
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
         </div>
     </div>
-</div>
+</form>
 
 @section scripts{
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
