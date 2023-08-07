@@ -4,7 +4,7 @@ using GitViewer.GitStorage.Models;
 
 namespace GitViewer.WebApp.Models
 {
-    public class CommitsViewModel
+    public class CommitsViewModel : PagedResult<SelectableCommitEditorViewModel>
     {
         [Required(ErrorMessage = "Owner can't be null")]
         public string Owner { get; set; } = string.Empty;
@@ -15,9 +15,7 @@ namespace GitViewer.WebApp.Models
         [Required(ErrorMessage = "User login can't be null")]
         public string Login { get; set; } = string.Empty;
 
-        public List<SelectableCommitEditorViewModel> Commits { get; set; } = new();
-
         public List<long> GetSelectedIds() => 
-            (from commit in this.Commits where commit.Selected select commit.Id).ToList();
+            (from commit in this.Results where commit.Selected select commit.Id).ToList();
     }
 }

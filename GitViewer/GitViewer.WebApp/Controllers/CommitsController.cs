@@ -1,6 +1,6 @@
 ﻿using GitViewer.GitStorage;
 using GitViewer.WebApp.Models;
-
+using GitViewer.WebApp.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GitViewer.WebApp.Controllers
@@ -25,7 +25,7 @@ namespace GitViewer.WebApp.Controllers
 
         async Task FillCommitsAsync(CommitsViewModel model, bool needSyncWithRemote = false)
         {
-            if (model.Commits.Any()) model.Commits.Clear();
+            if (model.Results.Any()) model.Results.Clear();
 
             var owner = model.Owner;
             var repo = model.Repo;
@@ -33,9 +33,9 @@ namespace GitViewer.WebApp.Controllers
 
             if (needSyncWithRemote) await _gitStorage.FetchCommitsAsync(owner, repo, login);
 
-            var searchResult = await _gitStorage.GetCommitsAsync(owner, repo, login);
-            foreach (var item in searchResult)
-                model.Commits.Add(new()
+            var searchResult = (await _gitStorage.GetCommitsAsync(owner, repo, login)).AsQueryable().GetPaged(1, 20);
+            foreach (var item in searchResult.Results)
+                model.Results.Add(new()
                 {
                     Selected = false,
                     Id = item.Id,
@@ -43,6 +43,10 @@ namespace GitViewer.WebApp.Controllers
                     Author = item.Author?.Name,
                     Date = item.Date
                 });
+            model.TotalPages = searchResult.TotalPages;
+            model.CurrentPage = searchResult.CurrentPage;
+            model.RowCount = searchResult.RowCount;
+            model.PageSize = searchResult.PageSize;
         }
 
         [HttpPost]

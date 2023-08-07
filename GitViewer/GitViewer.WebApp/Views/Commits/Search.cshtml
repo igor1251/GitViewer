@@ -1,4 +1,5 @@
-﻿@model CommitsViewModel
+﻿@using GitViewer.WebApp.Components
+@model CommitsViewModel
 @{
     ViewData["Title"] = "Git repository commits viewer";
 }
@@ -73,9 +74,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @Html.EditorFor(model => model.Commits)
+                                @Html.EditorFor(model => model.Results)
                             </tbody>
                         </table>
+                        @(await Component.InvokeAsync<PagerViewComponent>(Model))
                     </div>
                 </fieldset>
             </div>
