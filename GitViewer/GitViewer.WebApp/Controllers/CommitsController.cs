@@ -16,7 +16,7 @@ namespace GitViewer.WebApp.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Search()
         {
             if (!await _gitStorage.CheckRemoteStorageConfig())
                 return RedirectToAction("Index", "Auth");
@@ -70,7 +70,7 @@ namespace GitViewer.WebApp.Controllers
                 }
             }
             
-            return View("Index", model);
+            return View(model);
         }
     }
 }
