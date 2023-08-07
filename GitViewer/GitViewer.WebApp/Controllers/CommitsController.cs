@@ -1,6 +1,5 @@
 ﻿using GitViewer.GitStorage;
 using GitViewer.WebApp.Models;
-using GitViewer.WebApp.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GitViewer.WebApp.Controllers
@@ -33,8 +32,8 @@ namespace GitViewer.WebApp.Controllers
 
             if (needSyncWithRemote) await _gitStorage.FetchCommitsAsync(owner, repo, login);
 
-            var searchResult = (await _gitStorage.GetCommitsAsync(owner, repo, login)).AsQueryable().GetPaged(1, 20);
-            foreach (var item in searchResult.Results)
+            var searchResult = await _gitStorage.GetCommitsAsync(owner, repo, login);
+            foreach (var item in searchResult)
                 model.Results.Add(new()
                 {
                     Selected = false,
@@ -43,10 +42,33 @@ namespace GitViewer.WebApp.Controllers
                     Author = item.Author?.Name,
                     Date = item.Date
                 });
-            model.TotalPages = searchResult.TotalPages;
-            model.CurrentPage = searchResult.CurrentPage;
-            model.RowCount = searchResult.RowCount;
-            model.PageSize = searchResult.PageSize;
+        }
+
+        public async Task<IActionResult> GoToPage(int page = 1)
+        {
+            var response = await _gitStorage.SearchCommitsAsync(page);
+            var (owner, repo, login) = _gitStorage.GetSearchParameters();
+            var (currentPage, pageCount, pageSize) = _gitStorage.GetPaginationInfo();
+            var model = new CommitsViewModel()
+            {
+                Login = login,
+                Owner = owner,
+                Repo = repo,
+                
+                CurrentPage = currentPage,
+                PageSize = pageSize,
+                PageCount = pageCount,
+                
+                Results = response.Select(item => new SelectableCommitEditorViewModel()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Author = item.Author?.Name,
+                    Date = item.Date,
+                    Selected = false,
+                }).ToList(),
+            };
+            return View("Search", model);
         }
 
         [HttpPost]
@@ -58,7 +80,8 @@ namespace GitViewer.WebApp.Controllers
                 switch (action)
                 {
                     case "search":
-                        await FillCommitsAsync(model);
+                        //await FillCommitsAsync(model);
+                        _gitStorage.SetSearchParameters(model.Owner, model.Repo, model.Login);
                         break;
                     case "fetch":
                         await FillCommitsAsync(model, true);
@@ -73,8 +96,9 @@ namespace GitViewer.WebApp.Controllers
                         break;
                 }
             }
-            
-            return View(model);
+
+            //return View(model);
+            return RedirectToAction("GoToPage");
         }
     }
 }

@@ -12,10 +12,14 @@ namespace GitViewer.GitStorage.Local
     {
         readonly GitLocalStorageDbContext _dbContext;
 
+        
+
         public GitLocalStorage(GitLocalStorageDbContext dbContext)
         {
             _dbContext = dbContext;
         }
+
+        #region add
 
         public async Task AddCommitAsync(Commit commit)
         {
@@ -60,6 +64,17 @@ namespace GitViewer.GitStorage.Local
             return addedEntity.Entity;
         }
 
+        public async Task AddRemoteStorageConfigAsync(RemoteStorageConfig config)
+        {
+            await _dbContext.RemoteStorageConfigs.ExecuteDeleteAsync();
+            await _dbContext.RemoteStorageConfigs.AddAsync(config);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        #endregion
+
+        #region get
+
         public async Task<List<Commit>> GetCommitsAsync(string owner, string repo, string name)
         {
             var commits = await _dbContext.Commits.Where(item =>
@@ -68,13 +83,13 @@ namespace GitViewer.GitStorage.Local
                 item.Author != null && item.Author.Name == name).ToListAsync();
             return commits;
         }
-        
-        public async Task AddRemoteStorageConfigAsync(RemoteStorageConfig config)
-        {
-            await _dbContext.RemoteStorageConfigs.ExecuteDeleteAsync();
-            await _dbContext.RemoteStorageConfigs.AddAsync(config);
-            await _dbContext.SaveChangesAsync();
-        }
+
+        public async Task<RemoteStorageConfig?> GetRemoteStorageConfigAsync() =>
+            await _dbContext.RemoteStorageConfigs.FirstOrDefaultAsync();
+
+        #endregion
+
+        #region delete/update
 
         public async Task UpdateRemoteStorageConfigAsync(RemoteStorageConfig config)
         {
@@ -90,13 +105,12 @@ namespace GitViewer.GitStorage.Local
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<RemoteStorageConfig?> GetRemoteStorageConfigAsync() =>
-            await _dbContext.RemoteStorageConfigs.FirstOrDefaultAsync();
-
         public async Task DeleteCommitsAsync(List<long> commitsIds)
         {
             _dbContext.Commits.RemoveRange(_dbContext.Commits.Where(item => commitsIds.Contains(item.Id)));
             await _dbContext.SaveChangesAsync();
         }
+
+        #endregion
     }
 }

@@ -19,11 +19,49 @@ namespace GitViewer.GitStorage
         readonly GitRemoteStorage _remoteStorage;
         readonly ILogger<GitStorageFasade> _logger;
 
+
+        string _repo = string.Empty;
+        string _owner = string.Empty;
+        string _login = string.Empty;
+
+        int _pageSize = 20;
+        int _rowCount = 0;
+        int _pageCount = 0;
+        int _currentPage = 0;
+
         public GitStorageFasade(GitLocalStorage localStorage, GitRemoteStorage remoteStorage, ILogger<GitStorageFasade> logger)
         {
             _localStorage = localStorage;
             _remoteStorage = remoteStorage;
             _logger = logger;
+        }
+
+        public void SetPageSize(int pageSize = 20) => _pageSize = pageSize;
+
+        public void SetSearchParameters(string owner, string repo, string login)
+        {
+            _owner = owner;
+            _repo = repo;
+            _login = login;
+        }
+
+        public (string owner, string repo, string login) GetSearchParameters() => 
+            new(_owner, _repo, _login);
+
+        public (int currentPage, int pageCount, int pageSize) GetPaginationInfo() =>
+            new(_currentPage, _pageCount, _pageSize);
+
+        public async Task<List<Commit>> SearchCommitsAsync(int page = 1)
+        {
+            var result = await GetCommitsAsync(_owner, _repo, _login);
+
+            _rowCount = result.Count;
+            _pageCount = (int)Math.Ceiling((double)(_rowCount / _pageSize));
+            _currentPage = page > _pageCount ? 1 : page;
+
+            var skip = (_currentPage - 1) * _pageSize;
+
+            return result.Skip(skip).Take(_pageSize).ToList();
         }
 
         public async Task<string> GetLoginUrlAsync()
