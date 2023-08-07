@@ -4,12 +4,15 @@
         @Html.CheckBoxFor(model => model.Selected)
     </td>
     <td>
-        @Html.DisplayFor(model => model.Commit.Date)
+        @Html.DisplayFor(model => model.Date)
     </td>
     <td>
-        @Html.DisplayFor(model => model.Commit.Name)
+        @Html.DisplayFor(model => model.Name)
     </td>
     <td>
-        @Html.DisplayFor(model => model.Commit.Author.Name)
+        @Html.DisplayFor(model => model.Author)
+    </td>
+    <td>
+        @Html.HiddenFor(model => model.Id)
     </td>
 </tr>

@@ -86,5 +86,8 @@ namespace GitViewer.GitStorage
 
         public async Task<RemoteStorageConfig?> GetRemoteStorageConfigAsync() =>
             await _localStorage.GetRemoteStorageConfigAsync();
+
+        public async Task DeleteCommitsAsync(List<long> commitsIds) =>
+            await _localStorage.DeleteCommitsAsync(commitsIds);
     }
 }

@@ -92,5 +92,11 @@ namespace GitViewer.GitStorage.Local
 
         public async Task<RemoteStorageConfig?> GetRemoteStorageConfigAsync() =>
             await _dbContext.RemoteStorageConfigs.FirstOrDefaultAsync();
+
+        public async Task DeleteCommitsAsync(List<long> commitsIds)
+        {
+            _dbContext.Commits.RemoveRange(_dbContext.Commits.Where(item => commitsIds.Contains(item.Id)));
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

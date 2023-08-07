@@ -38,7 +38,10 @@ namespace GitViewer.WebApp.Controllers
                 model.Commits.Add(new()
                 {
                     Selected = false,
-                    Commit = item
+                    Id = item.Id,
+                    Name = item.Name,
+                    Author = item.Author?.Name,
+                    Date = item.Date
                 });
         }
 
@@ -57,7 +60,12 @@ namespace GitViewer.WebApp.Controllers
                         await FillCommitsAsync(model, true);
                         break;
                     case "delete":
-
+                        var selectedIds = model.GetSelectedIds();
+                        if (selectedIds.Any())
+                        {
+                            await _gitStorage.DeleteCommitsAsync(selectedIds);
+                            await FillCommitsAsync(model);
+                        }
                         break;
                 }
             }

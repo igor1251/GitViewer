@@ -16,5 +16,8 @@ namespace GitViewer.WebApp.Models
         public string Login { get; set; } = string.Empty;
 
         public List<SelectableCommitEditorViewModel> Commits { get; set; } = new();
+
+        public List<long> GetSelectedIds() => 
+            (from commit in this.Commits where commit.Selected select commit.Id).ToList();
     }
 }
