@@ -69,6 +69,7 @@ namespace GitViewer.WebApp.Controllers
                         break;
                 }
             }
+            
             return View("Index", model);
         }
     }
