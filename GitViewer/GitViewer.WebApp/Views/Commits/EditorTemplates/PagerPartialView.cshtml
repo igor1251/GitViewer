@@ -1,6 +1,6 @@
 ﻿@model CommitsViewModel
 @{
-    var urlTemplate = Url.Action() + "?page={0}";
+    var urlTemplate = "GoToPage?page={0}";
     var request = ViewContext.HttpContext.Request;
     foreach (var key in request.Query.Keys)
     {

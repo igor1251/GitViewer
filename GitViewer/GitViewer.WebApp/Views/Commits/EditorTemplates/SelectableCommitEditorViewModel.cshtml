@@ -1,7 +1,8 @@
 ﻿@model SelectableCommitEditorViewModel
+
 <tr>
     <td class="align-self-center mx-sm-2">
-        @Html.CheckBoxFor(model => model.Selected)
+        @Html.CheckBoxFor(model => model.Selected, new { item_id=Model.Id })
     </td>
     <td>
         @Html.DisplayFor(model => model.Date)

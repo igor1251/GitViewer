@@ -39,7 +39,7 @@ namespace GitViewer.GitStorage.Local
             await _dbContext.Commits.AddRangeAsync(commits);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         async Task<User> AddUserAsync(User user)
         {
             if (await _dbContext.Users.AnyAsync(item => item.Name == user.Name))
@@ -102,6 +102,12 @@ namespace GitViewer.GitStorage.Local
                 currenctConfig.ClientId = config.ClientId;
             }
             else await _dbContext.RemoteStorageConfigs.AddAsync(config);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task ClearCommitsAsync()
+        {
+            _dbContext.Commits.RemoveRange(_dbContext.Commits);
             await _dbContext.SaveChangesAsync();
         }
 

@@ -105,12 +105,19 @@ namespace GitViewer.GitStorage
         /// <param name="repo">имя репозитория, в котором ищем коммиты</param>
         /// <param name="login">автор коммита</param>
         /// <returns>task для ожидания</returns>
-        public async Task FetchCommitsAsync(string owner, string repo, string? login = null)
+        public async Task FetchCommitsAsync(string owner, string repo, string login)
         {
             _logger.LogInformation($"Search owner = {owner} repo = {repo} login = {login} in remoteStorage");
+            
+            SetSearchParameters(owner, repo, login);
+            
             var remoteCommits = await _remoteStorage.GetCommitsAsync(owner, repo, login);
-            _logger.LogInformation($"Done. Adding search result in localStorage");
-            await _localStorage.AddCommitAsync(remoteCommits);
+            if (remoteCommits?.Any() ?? false)
+            {
+                _logger.LogInformation($"Done. Adding search result in localStorage");
+                await _localStorage.ClearCommitsAsync();
+                await _localStorage.AddCommitAsync(remoteCommits);
+            }
         }
 
         public async Task AddRemoteStorageConfig(RemoteStorageConfig config) => 

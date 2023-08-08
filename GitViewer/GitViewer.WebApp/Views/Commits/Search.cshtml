@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-sm-4">
             <div class="row mb-4">
-                @*<form asp-action="Search" asp-controller="Commits" method="post">*@
+                <form asp-action="Search" asp-controller="Commits" method="post" id="myform">
                     <fieldset>
                         <legend>Search options</legend>
                         <div class="row p-sm-1">
@@ -17,7 +17,7 @@
                                         <label class="form-label" asp-for="Owner">Owner</label>
                                     </div>
                                     <div class="col-8 align-self-center">
-                                        <input id="owner" class="form-control" id="txtOwner" type="text" asp-for="Owner" value=@Model.Owner />
+                                        <input id="input_owner" class="form-control" type="text" asp-for="Owner" value=@Model.Owner />
                                         <span class="text-danger" asp-validation-for="Owner" />
                                     </div>
                                 </div>
@@ -30,7 +30,7 @@
                                         <label class="form-label" asp-for="Repo">Name</label>
                                     </div>
                                     <div class="col-8 align-self-center">
-                                        <input id="repo" class="form-control" id="txtRepo" type="text" asp-for="Repo" value=@Model.Repo />
+                                        <input id="input_repo" class="form-control" type="text" asp-for="Repo" value=@Model.Repo />
                                         <span class="text-danger" asp-validation-for="Repo" />
                                     </div>
                                 </div>
@@ -43,99 +43,50 @@
                                         <label class="form-label" asp-for="Login">Login</label>
                                     </div>
                                     <div class="col-8 align-self-center">
-                                        <input id="login" class="form-control" id="txtLogin" type="text" asp-for="Login" value=@Model.Login />
+                                        <input id="input_login" class="form-control" type="text" asp-for="Login" value=@Model.Login />
                                         <span class="text-danger" asp-validation-for="Login" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row p-sm-1 form-group">
-                            <button id="search" class="btn btn-primary w-25 mx-sm-1">Search</button>
+                            <button class="btn btn-primary w-25 mx-sm-1" asp-action="Search">Search</button>
+                            <button class="btn btn-primary w-25 mx-sm-1" asp-action="Fetch">Fetch</button>
                         </div>
                     </fieldset>
-                @*</form>*@
+                </form>
             </div>
         </div>
         <div class="col-sm-8">
             <fieldset>
                 <legend>Commits</legend>
                 <div class="row mb-4">
-                    <button class="btn btn-primary w-25 mx-sm-1" name="action" value="fetch">Fetch</button>
-                    <button class="btn btn-danger w-25 mx-sm-1" name="action" value="delete">Delete</button>
+                    <button class="btn btn-danger w-25 mx-sm-1" id="delete_button">Delete checked</button>
                 </div>
-                <div id="commits"></div>
-                @*<div class="row p-sm-1" id="grid">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Timestamp</th>
-                                <th>Description</th>
-                                <th>Author</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @Html.EditorFor(model => model.Results)
-                        </tbody>
-                    </table>
-                </div>
-                <div class="row p-sm-1">
-                    @Html.EditorForModel("PagerPartialView", Model)
-                </div>*@
+                <div id="commits">@{await Html.RenderPartialAsync("_CommitsPartialView", @Model);}</div>
             </fieldset>
         </div>
     </div>
 </div>
 
-<div class="container">
-    <div class="row mx-4">
-        <div id="testajax"></div>
-    </div>
-    <div class="row mx-4">
-        <button id="deleteBtn" class="btn btn-primary w-25 mx-sm-1">TestAJAX</button>
-    </div>
-</div>
-
-
-
 @section scripts {
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script>
-        $(function ()
+        $(document).ready(function () 
         {
-            $("#deleteBtn").click(function()
-            {
-                $.ajax({
-                    url: "@Url.Action("GoToPage", "Commits")" + "?page=1",
-                    type: "Get",
-                    success: function(result)
-                    {
-                        $("#commits").html(result);
-                        console.log(result);
-                    }
+            $("#delete_button").click(function () {
+                var selected = [];
+                $("input:checked").each(function ()
+                {
+                    selected.push($(this).attr("item-id"));
                 });
-            });
-        });
-    </script>
-    <script>
-        $(function ()
-        {
-            $("#search").click(function () {
-                var CommitsViewModel = {};
-
-                //CommitsViewModel.Results = @Model.Results;
-                CommitsViewModel.Owner = $("#owner").val();
-                CommitsViewModel.Login = $("#login").val();
-                CommitsViewModel.Repo = $("#repo").val();
-
                 $.ajax({
-                    url: "@Url.Action("Search", "Commits")",
+                    url: "@Url.Action("Delete", "Commits")",
                     type: "Post",
-                    data: { model: CommitsViewModel },
+                    data: { ids: selected },
                     success: function (result) {
                         $("#commits").html(result);
-                        console.log(result);
                     }
                 });
             });
