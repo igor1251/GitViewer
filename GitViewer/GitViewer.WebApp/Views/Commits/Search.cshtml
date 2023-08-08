@@ -86,7 +86,36 @@
     </div>
 </form>
 
+<div class="container">
+    <div class="row mx-4">
+        <div id="testajax"></div>
+    </div>
+    <div class="row mx-4">
+        <button id="deleteBtn" class="btn btn-primary w-25 mx-sm-1">TestAJAX</button>
+    </div>
+</div>
+
+
+
 @section scripts {
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(function ()
+        {
+            $("#deleteBtn").click(function()
+            {
+                $.ajax({
+                    url: "@Url.Action("TestAJAX", "Commits")",
+                    type: "Post",
+                    data: { text: "@Model.Owner" },
+                    success: function(result)
+                    {
+                        $("#testajax").html(result);
+                        console.log(result);
+                    }
+                });
+            });
+        });
+    </script>
 }

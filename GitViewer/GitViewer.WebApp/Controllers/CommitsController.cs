@@ -44,6 +44,12 @@ namespace GitViewer.WebApp.Controllers
                 });
         }
 
+        [HttpPost]
+        public IActionResult TestAJAX(string text)
+        {
+            return PartialView("_TestPartialView", text);
+        }
+
         public async Task<IActionResult> GoToPage(int page = 1)
         {
             var response = await _gitStorage.SearchCommitsAsync(page);
