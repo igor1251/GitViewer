@@ -1,0 +1,20 @@
+﻿@model CommitsViewModel
+
+<div class="row p-sm-1">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Timestamp</th>
+                <th>Description</th>
+                <th>Author</th>
+            </tr>
+        </thead>
+        <tbody>
+            @Html.EditorFor(model => model.Results)
+        </tbody>
+    </table>
+</div>
+<div class="row p-sm-1">
+    @Html.EditorForModel("PagerPartialView", Model)
+</div>

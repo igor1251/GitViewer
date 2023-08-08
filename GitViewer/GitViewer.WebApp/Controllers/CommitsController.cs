@@ -99,7 +99,8 @@ namespace GitViewer.WebApp.Controllers
                     Selected = false,
                 }).ToList(),
             };
-            return View("Search", model);
+            //return View("Search", model);
+            return PartialView("_CommitsPartialView", model);
         }
 
         [HttpGet]
@@ -113,7 +114,7 @@ namespace GitViewer.WebApp.Controllers
         [HttpPost]
         public IActionResult Search(CommitsViewModel model)
         {
-            if (!ModelState.IsValid) return View("Search", model);
+            //if (!ModelState.IsValid) return View("Search", model);
 
             _gitStorage.SetSearchParameters(model.Owner, model.Repo, model.Login);
             return RedirectToAction(nameof(GoToPage));
