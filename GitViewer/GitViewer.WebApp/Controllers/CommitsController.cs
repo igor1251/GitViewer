@@ -15,34 +15,29 @@ namespace GitViewer.WebApp.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Search()
-        {
-            if (!await _gitStorage.CheckRemoteStorageConfig())
-                return RedirectToAction("Index", "Auth");
-            return View(new CommitsViewModel());
-        }
+        #region old
 
-        async Task FillCommitsAsync(CommitsViewModel model, bool needSyncWithRemote = false)
-        {
-            if (model.Results.Any()) model.Results.Clear();
+        //async Task FillCommitsAsync(CommitsViewModel model, bool needSyncWithRemote = false)
+        //{
+        //    if (model.Results.Any()) model.Results.Clear();
 
-            var owner = model.Owner;
-            var repo = model.Repo;
-            var login = model.Login;
+        //    var owner = model.Owner;
+        //    var repo = model.Repo;
+        //    var login = model.Login;
 
-            if (needSyncWithRemote) await _gitStorage.FetchCommitsAsync(owner, repo, login);
+        //    if (needSyncWithRemote) await _gitStorage.FetchCommitsAsync(owner, repo, login);
 
-            var searchResult = await _gitStorage.GetCommitsAsync(owner, repo, login);
-            foreach (var item in searchResult)
-                model.Results.Add(new()
-                {
-                    Selected = false,
-                    Id = item.Id,
-                    Name = item.Name,
-                    Author = item.Author?.Name,
-                    Date = item.Date
-                });
-        }
+        //    var searchResult = await _gitStorage.GetCommitsAsync(owner, repo, login);
+        //    foreach (var item in searchResult)
+        //        model.Results.Add(new()
+        //        {
+        //            Selected = false,
+        //            Id = item.Id,
+        //            Name = item.Name,
+        //            Author = item.Author?.Name,
+        //            Date = item.Date
+        //        });
+        //}
 
         [HttpPost]
         public IActionResult TestAJAX(string text)
@@ -50,6 +45,36 @@ namespace GitViewer.WebApp.Controllers
             return PartialView("_TestPartialView", text);
         }
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Search(CommitsViewModel model, string action)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        switch (action)
+        //        {
+        //            case "search":
+        //                _gitStorage.SetSearchParameters(model.Owner, model.Repo, model.Login);
+        //                break;
+        //            case "fetch":
+        //                await FillCommitsAsync(model, true);
+        //                break;
+        //            case "delete":
+        //                var selectedIds = model.GetSelectedIds();
+        //                if (selectedIds.Any())
+        //                {
+        //                    await _gitStorage.DeleteCommitsAsync(selectedIds);
+        //                }
+        //                break;
+        //        }
+        //    }
+
+        //    return RedirectToAction("GoToPage");
+        //}
+
+        #endregion
+
+        [HttpGet]
         public async Task<IActionResult> GoToPage(int page = 1)
         {
             var response = await _gitStorage.SearchCommitsAsync(page);
@@ -77,31 +102,40 @@ namespace GitViewer.WebApp.Controllers
             return View("Search", model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Search(CommitsViewModel model, string action)
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            if (ModelState.IsValid)
-            {
-                switch (action)
-                {
-                    case "search":
-                        _gitStorage.SetSearchParameters(model.Owner, model.Repo, model.Login);
-                        break;
-                    case "fetch":
-                        await FillCommitsAsync(model, true);
-                        break;
-                    case "delete":
-                        var selectedIds = model.GetSelectedIds();
-                        if (selectedIds.Any())
-                        {
-                            await _gitStorage.DeleteCommitsAsync(selectedIds);
-                        }
-                        break;
-                }
-            }
+            if (!await _gitStorage.CheckRemoteStorageConfig())
+                return RedirectToAction("Index", "Auth");
+            return View("Search", new CommitsViewModel());
+        }
 
-            return RedirectToAction("GoToPage");
+        [HttpPost]
+        public IActionResult Search(CommitsViewModel model)
+        {
+            if (!ModelState.IsValid) return View("Search", model);
+
+            _gitStorage.SetSearchParameters(model.Owner, model.Repo, model.Login);
+            return RedirectToAction(nameof(GoToPage));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(List<long> ids)
+        {
+            if (!ModelState.IsValid) return RedirectToAction(nameof(GoToPage));
+
+            if (ids.Any())
+                await _gitStorage.DeleteCommitsAsync(ids);
+            return RedirectToAction(nameof(GoToPage));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Fetch(string owner, string repo, string login)
+        {
+            if (!ModelState.IsValid) return RedirectToAction(nameof(GoToPage));
+
+            await _gitStorage.FetchCommitsAsync(owner, repo, login);
+            return RedirectToAction(nameof(Search), new {owner, repo, login});
         }
     }
 }

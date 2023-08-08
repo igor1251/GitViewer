@@ -25,7 +25,7 @@ namespace GitViewer.WebApp.Controllers
             if (remoteStorageConfig != null)
             {
                 if (remoteStorageConfig.TokenNotSet) return Redirect(await _gitStorage.GetLoginUrlAsync());
-                else return RedirectToAction("Search", "Commits");
+                else return RedirectToAction("Index", "Commits");
             }
 
             return RedirectToAction("Index", "GitConfig");
@@ -40,7 +40,7 @@ namespace GitViewer.WebApp.Controllers
             
             _logger.LogInformation($"Recieved API-key {code}");
             
-            return RedirectToAction("Search", "Commits");
+            return RedirectToAction("Index", "Commits");
         }
     }
 }

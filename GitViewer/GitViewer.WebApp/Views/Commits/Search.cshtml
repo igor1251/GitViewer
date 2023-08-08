@@ -3,11 +3,11 @@
     ViewData["Title"] = "Git repository commits viewer";
 }
 
-<form asp-action="Search" method="post" asp-controller="Commits">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="row mb-4">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="row mb-4">
+                <form asp-action="Search" asp-controller="Commits" method="post">
                     <fieldset>
                         <legend>Search options</legend>
                         <div class="row p-sm-1">
@@ -50,41 +50,41 @@
                             </div>
                         </div>
                         <div class="row p-sm-1 form-group">
-                            <button class="btn btn-primary w-25 mx-sm-1" name="action" value="search">Search</button>
+                            <button class="btn btn-primary w-25 mx-sm-1">Search</button>
                         </div>
                     </fieldset>
-                </div>
-            </div>
-            <div class="col-sm-8">
-                <fieldset>
-                    <legend>Commits</legend>
-                    <div class="row mb-4">
-                        <button class="btn btn-primary w-25 mx-sm-1" name="action" value="fetch">Fetch</button>
-                        <button class="btn btn-danger w-25 mx-sm-1" name="action" value="delete">Delete</button>
-                    </div>
-                    <div class="row p-sm-1" id="grid">
-                        <table class="table table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Timestamp</th>
-                                    <th>Description</th>
-                                    <th>Author</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @Html.EditorFor(model => model.Results)
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="row p-sm-1">
-                        @Html.EditorForModel("PagerPartialView", Model)
-                    </div>
-                </fieldset>
+                </form>
             </div>
         </div>
+        <div class="col-sm-8">
+            <fieldset>
+                <legend>Commits</legend>
+                <div class="row mb-4">
+                    <button class="btn btn-primary w-25 mx-sm-1" name="action" value="fetch">Fetch</button>
+                    <button class="btn btn-danger w-25 mx-sm-1" name="action" value="delete">Delete</button>
+                </div>
+                <div class="row p-sm-1" id="grid">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Timestamp</th>
+                                <th>Description</th>
+                                <th>Author</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @Html.EditorFor(model => model.Results)
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row p-sm-1">
+                    @Html.EditorForModel("PagerPartialView", Model)
+                </div>
+            </fieldset>
+        </div>
     </div>
-</form>
+</div>
 
 <div class="container">
     <div class="row mx-4">
