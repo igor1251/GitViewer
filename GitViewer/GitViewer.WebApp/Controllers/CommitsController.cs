@@ -80,7 +80,6 @@ namespace GitViewer.WebApp.Controllers
                 switch (action)
                 {
                     case "search":
-                        //await FillCommitsAsync(model);
                         _gitStorage.SetSearchParameters(model.Owner, model.Repo, model.Login);
                         break;
                     case "fetch":
@@ -91,13 +90,11 @@ namespace GitViewer.WebApp.Controllers
                         if (selectedIds.Any())
                         {
                             await _gitStorage.DeleteCommitsAsync(selectedIds);
-                            await FillCommitsAsync(model);
                         }
                         break;
                 }
             }
 
-            //return View(model);
             return RedirectToAction("GoToPage");
         }
     }

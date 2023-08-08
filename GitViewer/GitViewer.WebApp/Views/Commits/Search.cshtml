@@ -9,7 +9,7 @@
             <div class="col-sm-4">
                 <div class="row mb-4">
                     <fieldset>
-                        <legend>Repository</legend>
+                        <legend>Search options</legend>
                         <div class="row p-sm-1">
                             <div class="form-group">
                                 <div class="row">
@@ -17,7 +17,7 @@
                                         <label class="form-label" asp-for="Owner">Owner</label>
                                     </div>
                                     <div class="col-8 align-self-center">
-                                        <input class="form-control" type="text" asp-for="Owner" value=@Model.Owner />
+                                        <input class="form-control" id="txtOwner" type="text" asp-for="Owner" value=@Model.Owner />
                                         <span class="text-danger" asp-validation-for="Owner" />
                                     </div>
                                 </div>
@@ -30,7 +30,7 @@
                                         <label class="form-label" asp-for="Repo">Name</label>
                                     </div>
                                     <div class="col-8 align-self-center">
-                                        <input class="form-control" type="text" asp-for="Repo" value=@Model.Repo />
+                                        <input class="form-control" id="txtRepo" type="text" asp-for="Repo" value=@Model.Repo />
                                         <span class="text-danger" asp-validation-for="Repo" />
                                     </div>
                                 </div>
@@ -43,13 +43,13 @@
                                         <label class="form-label" asp-for="Login">Login</label>
                                     </div>
                                     <div class="col-8 align-self-center">
-                                        <input class="form-control" type="text" asp-for="Login" value=@Model.Login />
+                                        <input class="form-control" id="txtLogin" type="text" asp-for="Login" value=@Model.Login />
                                         <span class="text-danger" asp-validation-for="Login" />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row p-sm-1">
+                        <div class="row p-sm-1 form-group">
                             <button class="btn btn-primary w-25 mx-sm-1" name="action" value="search">Search</button>
                         </div>
                     </fieldset>
@@ -62,9 +62,9 @@
                         <button class="btn btn-primary w-25 mx-sm-1" name="action" value="fetch">Fetch</button>
                         <button class="btn btn-danger w-25 mx-sm-1" name="action" value="delete">Delete</button>
                     </div>
-                    <div class="row p-sm-1">
+                    <div class="row p-sm-1" id="grid">
                         <table class="table table-striped table-sm">
-                            <thead class="thead-dark">
+                            <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Timestamp</th>
