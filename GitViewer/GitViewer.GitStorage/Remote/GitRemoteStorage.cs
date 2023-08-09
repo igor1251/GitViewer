@@ -18,6 +18,10 @@ namespace GitViewer.GitStorage.Remote
 
         string CLIENT_ID => _config?.ClientId ?? throw new Exception("ClientId can't be null");
 
+        /// <summary>
+        /// Настраивает config для подключения к API
+        /// </summary>
+        /// <param name="config">конфигурация</param>
         public void SetConfig(RemoteStorageConfig config)
         {
             _config = config;
@@ -30,6 +34,10 @@ namespace GitViewer.GitStorage.Remote
             }
         }
 
+        /// <summary>
+        /// Получает ссылку на страницу авторизации GitHub
+        /// </summary>
+        /// <returns>ссылка</returns>
         public string GetLoginUrl()
         {
             var request = new OauthLoginRequest(CLIENT_ID)
@@ -42,14 +50,22 @@ namespace GitViewer.GitStorage.Remote
             return link;
         }
 
+        /// <summary>
+        /// Устанавливает токен для обращения к ресурсам GitHub
+        /// </summary>
+        /// <param name="token">токен</param>
         public void SetOauthToken(string token)
         {
             _client.Credentials = new(token);
         }
 
-        public void SetRemoteStorageConfig(RemoteStorageConfig config) => 
-            _config = config;
-
+        /// <summary>
+        /// Получает список коммитов по указанным критериям
+        /// </summary>
+        /// <param name="owner">владелец репозитория</param>
+        /// <param name="repo">репозиторий</param>
+        /// <param name="login">создатель коммита</param>
+        /// <returns>список коммитов</returns>
         public async Task<List<Models.Commit>> GetCommitsAsync(string owner, string repo, string? login = null)
         {
             try
