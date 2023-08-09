@@ -52,27 +52,34 @@ namespace GitViewer.GitStorage.Remote
 
         public async Task<List<Models.Commit>> GetCommitsAsync(string owner, string repo, string? login = null)
         {
-            var remoteRepo = await _client.Repository.Get(owner, repo);
-            
-            var request = new CommitRequest();
-            
-            if (!string.IsNullOrEmpty(login))
-                request.Author = login;
-            
-            var commits = (await _client.Repository.Commit.GetAll(remoteRepo.Id, request)).Select(item => new Models.Commit()
+            try
             {
-                Name = item.Commit.Message,
-                Date = item.Commit.Author.Date.DateTime,
-                Author = new Models.User() { Name = item.Commit.Author.Name },
-                Repository = new Models.Repository()
+                var remoteRepo = await _client.Repository.Get(owner, repo);
+
+                var request = new CommitRequest();
+
+                if (!string.IsNullOrEmpty(login))
+                    request.Author = login;
+
+                var commits = (await _client.Repository.Commit.GetAll(remoteRepo.Id, request)).Select(item => new Models.Commit()
                 {
-                    RemoteId = remoteRepo.Id,
-                    Name = remoteRepo.Name,
-                    Owner = new Models.User() { Name = remoteRepo.Owner.Login },
-                }
-            }).ToList();
-            
-            return commits;
+                    Name = item.Commit.Message,
+                    Date = item.Commit.Author.Date.DateTime,
+                    Author = new Models.User() { Name = item.Commit.Author.Name },
+                    Repository = new Models.Repository()
+                    {
+                        RemoteId = remoteRepo.Id,
+                        Name = remoteRepo.Name,
+                        Owner = new Models.User() { Name = remoteRepo.Owner.Login },
+                    }
+                }).ToList();
+
+                return commits;
+            }
+            catch (NotFoundException)
+            {
+                return new();
+            }
         }
     }
 }

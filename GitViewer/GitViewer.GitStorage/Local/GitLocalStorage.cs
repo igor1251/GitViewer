@@ -77,11 +77,11 @@ namespace GitViewer.GitStorage.Local
 
         public async Task<List<Commit>> GetCommitsAsync(string owner, string repo, string name)
         {
-            var commits = await _dbContext.Commits.Where(item =>
+            var commits = await _dbContext.Commits.Include(c => c.Author).Include(c => c.Repository).Where(item =>
                 item.Repository != null && item.Repository.Owner != null && item.Repository.Owner.Name == owner &&
                 item.Repository.Name == repo &&
                 item.Author != null && item.Author.Name == name).ToListAsync();
-            return commits;
+            return commits ?? new();
         }
 
         public async Task<RemoteStorageConfig?> GetRemoteStorageConfigAsync() =>
