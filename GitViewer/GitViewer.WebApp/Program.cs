@@ -1,6 +1,7 @@
 using GitViewer.GitStorage;
 using GitViewer.GitStorage.Local;
 using GitViewer.GitStorage.Remote;
+using GitViewer.WebApp.Models;
 
 namespace GitViewer.WebApp
 {
@@ -16,6 +17,8 @@ namespace GitViewer.WebApp
             builder.Services.AddSingleton<GitRemoteStorage>();
             builder.Services.AddSingleton<GitLocalStorage>();
             builder.Services.AddSingleton<GitStorageFasade>();
+            builder.Services.AddScoped<CommitsViewModel>();
+            builder.Services.AddScoped<GitConfigViewModel>();
 
             var app = builder.Build();
 
@@ -25,9 +28,7 @@ namespace GitViewer.WebApp
             //    app.UseExceptionHandler("/Home/Error");
             //}
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.MapControllerRoute(

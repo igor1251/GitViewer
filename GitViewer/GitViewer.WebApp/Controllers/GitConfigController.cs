@@ -10,37 +10,45 @@ namespace GitViewer.WebApp.Controllers
     {
         readonly GitStorageFasade _gitStorage;
         readonly ILogger<GitConfigController> _logger;
+        readonly GitConfigViewModel _viewModel;
 
-        public GitConfigController(GitStorageFasade gitStorage, ILogger<GitConfigController> logger)
+        public GitConfigController(GitStorageFasade gitStorage, ILogger<GitConfigController> logger, GitConfigViewModel viewModel)
         {
             _gitStorage = gitStorage;
             _logger = logger;
+            _viewModel = viewModel;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(new GitConfigViewModel());
+            var currentConfig = await _gitStorage.GetRemoteStorageConfigAsync();
+            if (currentConfig != null)
+            {
+                _viewModel.Login = currentConfig.Login;
+                _viewModel.Password = currentConfig.Password;
+                _viewModel.ClientSecret = currentConfig.ClientSecret;
+                _viewModel.ClientId = currentConfig.ClientId;
+            }
+            return View(_viewModel);
         }
 
-        public async Task<IActionResult> Save(GitConfigViewModel model, string action)
+        [HttpPost]
+        public async Task<IActionResult> Save(string login, string password, string clientId, string clientSecret)
         {
             if (ModelState.IsValid)
             {
-                switch (action)
+                await _gitStorage.UpdateRemoteStorageConfig(new()
                 {
-                    case "save":
-                        var config = new RemoteStorageConfig()
-                        {
-                            Login = model.Login,
-                            Password = model.Password,
-                            ClientId = model.ClientId,
-                            ClientSecret = model.ClientSecret,
-                        };
-                        await _gitStorage.UpdateRemoteStorageConfig(config);
-                        return RedirectToAction("Index", "Auth");
-                }
+                    ClientId = clientId,
+                    ClientSecret = clientSecret,
+                    Login = login,
+                    Password = password,
+                });
+                
+                return RedirectToAction("Index", "Auth");
             }
-            return View("Index", model);
+            
+            return View("Index", _viewModel);
         }
     }
 }

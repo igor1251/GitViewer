@@ -61,7 +61,11 @@
                             </div>
                         </div>
                         <div class="row p-sm-1">
-                            <button class="btn btn-primary w-25" name="action" value="save">Save</button>
+                            <button class="btn btn-primary w-25" 
+                                    asp-route-clientId="@Model.ClientId" asp-route-clientSecret="@Model.ClientSecret" asp-route-login="@Model.Login"
+                                    asp-route-password="@Model.Password">
+                                Save
+                            </button>
                         </div>
                     </fieldset>
                 </div>

@@ -1,6 +1,10 @@
-﻿using GitViewer.GitStorage;
+﻿using System.Drawing.Printing;
+
+using GitViewer.GitStorage;
 using GitViewer.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
+
+using NuGet.Protocol.Plugins;
 
 namespace GitViewer.WebApp.Controllers
 {
@@ -8,98 +12,48 @@ namespace GitViewer.WebApp.Controllers
     {
         readonly GitStorageFasade _gitStorage;
         readonly ILogger<CommitsController> _logger;
+        readonly CommitsViewModel _viewModel;
 
-        public CommitsController(GitStorageFasade gitStorage, ILogger<CommitsController> logger)
+        public CommitsController(GitStorageFasade gitStorage, ILogger<CommitsController> logger, CommitsViewModel viewModel)
         {
             _gitStorage = gitStorage;
             _logger = logger;
+            _viewModel = viewModel;
         }
 
-        #region old
-
-        //async Task FillCommitsAsync(CommitsViewModel model, bool needSyncWithRemote = false)
-        //{
-        //    if (model.Results.Any()) model.Results.Clear();
-
-        //    var owner = model.Owner;
-        //    var repo = model.Repo;
-        //    var login = model.Login;
-
-        //    if (needSyncWithRemote) await _gitStorage.FetchCommitsAsync(owner, repo, login);
-
-        //    var searchResult = await _gitStorage.GetCommitsAsync(owner, repo, login);
-        //    foreach (var item in searchResult)
-        //        model.Results.Add(new()
-        //        {
-        //            Selected = false,
-        //            Id = item.Id,
-        //            Name = item.Name,
-        //            Author = item.Author?.Name,
-        //            Date = item.Date
-        //        });
-        //}
-
-        [HttpPost]
-        public IActionResult TestAJAX(string text)
+        async Task LoadCommitsAsync(string owner, string repo, string login, int page = 1)
         {
-            return PartialView("_TestPartialView", text);
+            var response = await _gitStorage.SearchCommitsAsync(page);
+            var (currentPage, pageCount, pageSize) = _gitStorage.GetPaginationInfo();
+
+            _viewModel.Login = login;
+            _viewModel.Owner = owner;
+            _viewModel.Repo = repo;
+
+            _viewModel.CurrentPage = currentPage;
+            _viewModel.PageSize = pageSize;
+            _viewModel.PageCount = pageCount;
+
+            if (_viewModel.Results.Any()) _viewModel.Results.Clear();
+
+            _viewModel.Results.AddRange(response.Select(item => new SelectableCommitEditorViewModel()
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Author = item.Author?.Name,
+                Date = item.Date,
+                Selected = false,
+            }));
         }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Search(CommitsViewModel model, string action)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        switch (action)
-        //        {
-        //            case "search":
-        //                _gitStorage.SetSearchParameters(model.Owner, model.Repo, model.Login);
-        //                break;
-        //            case "fetch":
-        //                await FillCommitsAsync(model, true);
-        //                break;
-        //            case "delete":
-        //                var selectedIds = model.GetSelectedIds();
-        //                if (selectedIds.Any())
-        //                {
-        //                    await _gitStorage.DeleteCommitsAsync(selectedIds);
-        //                }
-        //                break;
-        //        }
-        //    }
-
-        //    return RedirectToAction("GoToPage");
-        //}
-
-        #endregion
 
         [HttpGet]
         public async Task<IActionResult> GoToPage(int page = 1)
         {
-            var response = await _gitStorage.SearchCommitsAsync(page);
+
             var (owner, repo, login) = _gitStorage.GetSearchParameters();
-            var (currentPage, pageCount, pageSize) = _gitStorage.GetPaginationInfo();
-            var model = new CommitsViewModel()
-            {
-                Login = login,
-                Owner = owner,
-                Repo = repo,
-                
-                CurrentPage = currentPage,
-                PageSize = pageSize,
-                PageCount = pageCount,
-                
-                Results = response.Select(item => new SelectableCommitEditorViewModel()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Author = item.Author?.Name,
-                    Date = item.Date,
-                    Selected = false,
-                }).ToList(),
-            };
-            return View("Search", model);
+            await LoadCommitsAsync(owner, repo, login, page);
+
+            return View("Search", _viewModel);
         }
 
         [HttpGet]
@@ -107,83 +61,46 @@ namespace GitViewer.WebApp.Controllers
         {
             if (!await _gitStorage.CheckRemoteStorageConfig())
                 return RedirectToAction("Index", "Auth");
-            return View("Search", new CommitsViewModel());
+            
+            return View("Search", _viewModel);
         }
 
-        [HttpPost]
-        public IActionResult Search(CommitsViewModel model)
+        [HttpGet]
+        public IActionResult Search(string owner, string repo, string login)
         {
-            if (!ModelState.IsValid) return View("Search", model);
-
-            _gitStorage.SetSearchParameters(model.Owner, model.Repo, model.Login);
+            if (!ModelState.IsValid) 
+                return View("Search", _viewModel);
+            
+            _gitStorage.SetSearchParameters(owner, repo, login);
+            
             return RedirectToAction(nameof(GoToPage));
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(List<long> ids)
         {
-            var model = new CommitsViewModel();
             if (ModelState.IsValid)
             {
                 if (ids.Any())
                     await _gitStorage.DeleteCommitsAsync(ids);
 
-                var response = await _gitStorage.SearchCommitsAsync();
                 var (owner, repo, login) = _gitStorage.GetSearchParameters();
-                var (currentPage, pageCount, pageSize) = _gitStorage.GetPaginationInfo();
-
-                model.Login = login;
-                model.Owner = owner;
-                model.Repo = repo;
-
-                model.CurrentPage = currentPage;
-                model.PageSize = pageSize;
-                model.PageCount = pageCount;
-
-                model.Results = response.Select(item => new SelectableCommitEditorViewModel()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Author = item.Author?.Name,
-                    Date = item.Date,
-                    Selected = false,
-                }).ToList();
-                
+                await LoadCommitsAsync(owner, repo, login);
             }
             
-            return PartialView("_CommitsPartialView", model);
+            return PartialView("_CommitsPartialView", _viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Fetch(CommitsViewModel model)
+        public async Task<IActionResult> Fetch(string owner, string repo, string login)
         {
             if (ModelState.IsValid)
             {
-                await _gitStorage.FetchCommitsAsync(model.Owner, model.Repo, model.Login);
-
-                var response = await _gitStorage.SearchCommitsAsync();
-                var (currentPage, pageCount, pageSize) = _gitStorage.GetPaginationInfo();
-                model = new CommitsViewModel()
-                {
-                    Login = model.Owner,
-                    Owner = model.Login,
-                    Repo = model.Repo,
-
-                    CurrentPage = currentPage,
-                    PageSize = pageSize,
-                    PageCount = pageCount,
-
-                    Results = response.Select(item => new SelectableCommitEditorViewModel()
-                    {
-                        Id = item.Id,
-                        Name = item.Name,
-                        Author = item.Author?.Name,
-                        Date = item.Date,
-                        Selected = false,
-                    }).ToList(),
-                };
+                await _gitStorage.FetchCommitsAsync(owner, repo, login);
+                await LoadCommitsAsync(owner, repo, login);
             }
-            return RedirectToAction(nameof(GoToPage), model);
+
+            return RedirectToAction(nameof(GoToPage), _viewModel);
         }
     }
 }
