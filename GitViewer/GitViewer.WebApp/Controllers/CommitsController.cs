@@ -61,6 +61,7 @@ namespace GitViewer.WebApp.Controllers
         {
             if (!await _gitStorage.CheckRemoteStorageConfig())
                 return RedirectToAction("Index", "Auth");
+            else await _gitStorage.PrepareAsync();
             
             return View("Search", _viewModel);
         }

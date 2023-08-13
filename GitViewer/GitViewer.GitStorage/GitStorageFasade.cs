@@ -188,5 +188,15 @@ namespace GitViewer.GitStorage
         /// <returns>Task</returns>
         public async Task DeleteCommitsAsync(List<long> commitsIds) =>
             await _localStorage.DeleteCommitsAsync(commitsIds);
+
+        /// <summary>
+        /// Настраивает конфигурацию соединения с API GitHub
+        /// </summary>
+        /// <returns>task</returns>
+        public async Task PrepareAsync()
+        {
+            var config = await _localStorage.GetRemoteStorageConfigAsync();
+            _remoteStorage.SetConfig(config ?? new());
+        }
     }
 }
