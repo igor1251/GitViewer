@@ -117,14 +117,10 @@ namespace GitViewer.GitStorage
         /// <returns>список коммитов</returns>
         public async Task<List<Commit>> GetCommitsAsync(string owner, string repo, string login)
         {
-            _logger.LogInformation($"Search owner = {owner} repo = {repo} login = {login} in localStorage");
             var response = await _localStorage.GetCommitsAsync(owner, repo, login);
-            _logger.LogInformation($"Done");
             if (!response.Any())
             {
-                _logger.LogInformation($"Search result is empty. Syncing with remoteStorage");
                 var result = await FetchCommitsAsync(owner, repo, login);
-                _logger.LogInformation($"Done");
                 if (result) return await GetCommitsAsync(owner, repo, login);
             }
             return response ?? new();
@@ -138,15 +134,12 @@ namespace GitViewer.GitStorage
         /// <param name="login">автор коммита</param>
         /// <returns>task для ожидания</returns>
         public async Task<bool> FetchCommitsAsync(string owner, string repo, string login)
-        {
-            _logger.LogInformation($"Search owner = {owner} repo = {repo} login = {login} in remoteStorage");
-            
+        {            
             SetSearchParameters(owner, repo, login);
             
             var remoteCommits = await _remoteStorage.GetCommitsAsync(owner, repo, login);
             if (remoteCommits?.Any() ?? false)
             {
-                _logger.LogInformation($"Done. Adding search result in localStorage");
                 await _localStorage.ClearCommitsAsync();
                 await _localStorage.AddCommitAsync(remoteCommits);
                 return true;

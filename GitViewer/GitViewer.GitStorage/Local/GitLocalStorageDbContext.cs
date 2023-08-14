@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GitViewer.GitStorage.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace GitViewer.GitStorage.Local
 {
@@ -15,11 +16,19 @@ namespace GitViewer.GitStorage.Local
         public DbSet<Repository> Repositories { get; set; }
         public DbSet<RemoteStorageConfig> RemoteStorageConfigs { get; set; }
 
-        public GitLocalStorageDbContext() => Database.EnsureCreated();
+        readonly ILogger<GitLocalStorageDbContext> _logger;
+
+        public GitLocalStorageDbContext(ILogger<GitLocalStorageDbContext> logger)
+        {
+            _logger = logger;
+
+            Database.EnsureCreated();
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=gitcommitsdb;Trusted_Connection=True;");
+            optionsBuilder.LogTo(msg => _logger.LogInformation(msg));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
