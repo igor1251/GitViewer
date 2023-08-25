@@ -12,6 +12,7 @@
                              Title="GitViewer"
                              Icon="/Resources/Icons/github.png"
                              WindowStartupLocation="CenterScreen"
+                             Topmost="True"
                              Height="450"
                              Width="800">
     <adonisControls:AdonisWindow.DataContext>
@@ -20,20 +21,25 @@
     <adonisControls:AdonisWindow.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </adonisControls:AdonisWindow.Resources>
-    <adonisControls:AdonisWindow.TitleBarContent>
-        <CheckBox Content="Dark mode" Style="{DynamicResource {x:Static adonisUi:Styles.ToggleSwitch}}" HorizontalAlignment="Right" VerticalAlignment="Center"
-                  Margin="5"
-                  Checked="ColorModeChanged" Unchecked="ColorModeChanged"/>
-    </adonisControls:AdonisWindow.TitleBarContent>
     <controls:BusyIndicator IsBusy="{Binding IsBusy}">
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <GridSplitter Grid.Column="1" Width="2" HorizontalAlignment="Stretch"/>
-            <StackPanel Grid.Column="0">
+            <Menu Grid.Row="0" Grid.ColumnSpan="3">
+                <MenuItem Header="Settings">
+                    <MenuItem Header="Theme settings" Command="{Binding AppearanceCommand}"/>
+                    <MenuItem Header="API Configuration" Command="{Binding SettingsCommand}"/>
+                </MenuItem>
+            </Menu>
+            <GridSplitter Grid.Column="1" Grid.Row="1" Width="2" HorizontalAlignment="Stretch"/>
+            <StackPanel Grid.Column="0" Grid.Row="1">
                 <GroupBox Header="Owner" Style="{DynamicResource GroupBoxStyle}">
                     <TextBox Text="{Binding Owner, UpdateSourceTrigger=PropertyChanged}"/>
                 </GroupBox>
@@ -55,7 +61,7 @@
                             Command="{Binding FetchCommand}"/>
                 </Grid>
             </StackPanel>
-            <Grid Grid.Column="2">
+            <Grid Grid.Column="2" Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>

@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using GitViewer.Desktop.Models;
+using GitViewer.Desktop.Views;
 using GitViewer.GitStorage.Models;
 
 namespace GitViewer.Desktop.ViewModels
@@ -40,7 +41,7 @@ namespace GitViewer.Desktop.ViewModels
         [ObservableProperty]
         ObservableCollection<SelectableCommit> _commits = new ObservableCollection<SelectableCommit>();
 
-        IRelayCommand? _fetchCommand, _searchCommand, _deleteCommand;
+        IRelayCommand? _fetchCommand, _searchCommand, _deleteCommand, _settingsCommand, _appearanceCommand;
 
         bool CanFetchOrSearch => !string.IsNullOrEmpty(Owner) && !string.IsNullOrEmpty(Repo) && !string.IsNullOrEmpty(Author);
 
@@ -58,5 +59,16 @@ namespace GitViewer.Desktop.ViewModels
         {
 
         });
+
+        public IRelayCommand SettingsCommand => _settingsCommand ??= new RelayCommand(() =>
+        {
+            var dialog = new SettingsWindow();
+            if (dialog.ShowDialog() ?? false)
+            {
+                var result = dialog.GetUserInput();
+            }
+        });
+
+        public IRelayCommand AppearanceCommand => _appearanceCommand ??= new RelayCommand(() => new AppearanceWindow().ShowDialog());
     }
 }

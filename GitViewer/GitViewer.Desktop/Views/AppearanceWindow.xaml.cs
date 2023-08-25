@@ -12,27 +12,28 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+using AdonisUI;
 using AdonisUI.Controls;
-
-using GitViewer.Desktop.ViewModels;
 
 namespace GitViewer.Desktop.Views
 {
     /// <summary>
-    /// Логика взаимодействия для LoginWindow.xaml
+    /// Логика взаимодействия для AppearanceWindow.xaml
     /// </summary>
-    public partial class LoginWindow : AdonisWindow
+    public partial class AppearanceWindow : AdonisWindow
     {
-        public LoginWindow()
+        public AppearanceWindow()
         {
             InitializeComponent();
         }
 
-        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        bool _isDark = false;
+
+        private void ColorModeChanged(object sender, RoutedEventArgs e)
         {
-            if (DataContext is LoginViewModel model)
-                if (sender is PasswordBox password)
-                    model.Password = password.Password;
+            ResourceLocator.SetColorScheme(Application.Current.Resources, _isDark ? ResourceLocator.LightColorScheme : ResourceLocator.DarkColorScheme);
+
+            _isDark = !_isDark;
         }
     }
 }

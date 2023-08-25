@@ -12,4 +12,14 @@
         <Setter Property="SelectionUnit" Value="FullRow"/>
         <Setter Property="AutoGenerateColumns" Value="False"/>
     </Style>
+    <Style x:Key="SettingsButton" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Content">
+            <Setter.Value>
+                <Image Source="/Resources/Icons/settings.png" Width="18" Height="18"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

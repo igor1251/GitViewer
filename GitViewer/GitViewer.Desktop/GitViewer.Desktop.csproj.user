@@ -10,7 +10,10 @@
     <Compile Update="Controls\BusyIndicator.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\LoginWindow.xaml.cs">
+    <Compile Update="Views\AppearanceWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\SettingsWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MainWindow.xaml.cs">
@@ -24,7 +27,10 @@
     <Page Update="Resources\CustomStyles\Styles.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\LoginWindow.xaml">
+    <Page Update="Views\AppearanceWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SettingsWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainWindow.xaml">

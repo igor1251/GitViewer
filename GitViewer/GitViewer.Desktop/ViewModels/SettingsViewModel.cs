@@ -11,7 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace GitViewer.Desktop.ViewModels
 {
-    public partial class LoginViewModel : ObservableObject
+    public partial class SettingsViewModel : ObservableObject
     {
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SignInCommand))]

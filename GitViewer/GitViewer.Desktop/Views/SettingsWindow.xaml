@@ -1,4 +1,4 @@
-﻿<adonisControls:AdonisWindow x:Class="GitViewer.Desktop.Views.LoginWindow"
+﻿<adonisControls:AdonisWindow x:Class="GitViewer.Desktop.Views.SettingsWindow"
                              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,7 +8,7 @@
                              xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI" 
                              xmlns:viewmodels="clr-namespace:GitViewer.Desktop.ViewModels"
                              mc:Ignorable="d"
-                             Title="Sign in" 
+                             Title="GitHub API settings" 
                              FontFamily="Noto Sans"
                              Height="400" 
                              Width="300"
@@ -18,7 +18,7 @@
                              ResizeMode="NoResize"
                              Icon="/Resources/Icons/github.png">
     <adonisControls:AdonisWindow.DataContext>
-        <viewmodels:LoginViewModel/>
+        <viewmodels:SettingsViewModel/>
     </adonisControls:AdonisWindow.DataContext>
     <Grid>
         <Grid.RowDefinitions>
@@ -46,7 +46,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Sign in" Grid.Column="0" Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}" Margin="5"
+            <Button Content="Save" Grid.Column="0" Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}" Margin="5"
                     Command="{Binding SignInCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
             <Button Content="Cancel" Grid.Column="1" Margin="5"
