@@ -1,0 +1,57 @@
+﻿<adonisControls:AdonisWindow x:Class="GitViewer.Desktop.Views.LoginWindow"
+                             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                             xmlns:local="clr-namespace:GitViewer.Desktop.Views"
+                             xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+                             xmlns:adonisControls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI" 
+                             xmlns:viewmodels="clr-namespace:GitViewer.Desktop.ViewModels"
+                             mc:Ignorable="d"
+                             Title="Sign in" 
+                             FontFamily="Noto Sans"
+                             Height="400" 
+                             Width="300"
+                             WindowStartupLocation="CenterScreen"
+                             Topmost="True"
+                             ShowInTaskbar="False"
+                             ResizeMode="NoResize"
+                             Icon="/Resources/Icons/github.png">
+    <adonisControls:AdonisWindow.DataContext>
+        <viewmodels:LoginViewModel/>
+    </adonisControls:AdonisWindow.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <GroupBox Header="ClienID" Grid.Row="0" Style="{DynamicResource GroupBoxStyle}">
+            <TextBox Text="{Binding ClientID, UpdateSourceTrigger=PropertyChanged}"/>
+        </GroupBox>
+        <GroupBox Header="Client secret" Grid.Row="1" Style="{DynamicResource GroupBoxStyle}">
+            <TextBox Text="{Binding ClientSecret, UpdateSourceTrigger=PropertyChanged}"/>
+        </GroupBox>
+        <GroupBox Header="Login" Grid.Row="2" Style="{DynamicResource GroupBoxStyle}">
+            <TextBox Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"/>
+        </GroupBox>
+        <GroupBox Header="Password" Grid.Row="3" Style="{DynamicResource GroupBoxStyle}">
+            <PasswordBox PasswordChanged="PasswordBox_PasswordChanged"/>
+        </GroupBox>
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Sign in" Grid.Column="0" Style="{DynamicResource {x:Static adonisUi:Styles.AccentButton}}" Margin="5"
+                    Command="{Binding SignInCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+            <Button Content="Cancel" Grid.Column="1" Margin="5"
+                    Command="{Binding CancelCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+        </Grid>
+    </Grid>
+</adonisControls:AdonisWindow>
