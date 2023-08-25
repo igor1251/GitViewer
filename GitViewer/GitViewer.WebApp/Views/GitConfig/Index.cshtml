@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
-            <form asp-action="Save" asp-controller="GitConfig">
+            <form asp-action="Save" asp-controller="GitConfig" method="post">
                 <div class="row mb-4">
                     <fieldset>
                         <legend>GitHub API configuration</legend>
@@ -63,7 +63,7 @@
                         <div class="row p-sm-1">
                             <button class="btn btn-primary w-25" 
                                     asp-route-clientId="@Model.ClientId" asp-route-clientSecret="@Model.ClientSecret" asp-route-login="@Model.Login"
-                                    asp-route-password="@Model.Password">
+                                    asp-route-password="@Model.Password" asp-action="Save">
                                 Save
                             </button>
                         </div>

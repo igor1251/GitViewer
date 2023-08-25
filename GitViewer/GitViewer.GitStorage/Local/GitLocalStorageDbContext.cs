@@ -22,13 +22,19 @@ namespace GitViewer.GitStorage.Local
         {
             _logger = logger;
 
+            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=gitcommitsdb;Trusted_Connection=True;");
-            optionsBuilder.LogTo(msg => _logger.LogInformation(msg));
+            optionsBuilder.LogTo(msg => _logger.LogInformation(msg), LogLevel.Information);
+            optionsBuilder.LogTo(msg => _logger.LogError(msg), LogLevel.Error);
+            optionsBuilder.LogTo(msg => _logger.LogCritical(msg), LogLevel.Critical);
+            optionsBuilder.LogTo(msg => _logger.LogWarning(msg), LogLevel.Warning);
+            optionsBuilder.LogTo(msg => _logger.LogTrace(msg), LogLevel.Trace);
+            optionsBuilder.LogTo(msg => System.Diagnostics.Debug.WriteLine(msg), LogLevel.Debug);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
