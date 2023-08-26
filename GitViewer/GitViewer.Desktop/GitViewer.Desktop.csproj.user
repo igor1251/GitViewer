@@ -10,9 +10,6 @@
     <Compile Update="Controls\BusyIndicator.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\AppearanceWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Views\SettingsWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -25,9 +22,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Resources\CustomStyles\Styles.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\AppearanceWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\SettingsWindow.xaml">

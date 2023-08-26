@@ -21,6 +21,12 @@
     <adonisControls:AdonisWindow.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </adonisControls:AdonisWindow.Resources>
+    <adonisControls:AdonisWindow.TitleBarContent>
+        <CheckBox Content="Dark mode" Style="{DynamicResource {x:Static adonisUi:Styles.ToggleSwitch}}"
+                  Margin="5"
+                  HorizontalAlignment="Right"
+                  IsChecked="{Binding IsDark}"/>
+    </adonisControls:AdonisWindow.TitleBarContent>
     <controls:BusyIndicator IsBusy="{Binding IsBusy}">
         <Grid>
             <Grid.RowDefinitions>
@@ -34,7 +40,6 @@
             </Grid.ColumnDefinitions>
             <Menu Grid.Row="0" Grid.ColumnSpan="3">
                 <MenuItem Header="Settings">
-                    <MenuItem Header="Theme settings" Command="{Binding AppearanceCommand}"/>
                     <MenuItem Header="API Configuration" Command="{Binding SettingsCommand}"/>
                 </MenuItem>
             </Menu>

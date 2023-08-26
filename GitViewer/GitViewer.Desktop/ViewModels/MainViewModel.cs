@@ -4,7 +4,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+
+using AdonisUI;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -19,6 +22,9 @@ namespace GitViewer.Desktop.ViewModels
     {
         [ObservableProperty]
         bool _isBusy = false;
+
+        [ObservableProperty]
+        bool _isDark = false;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(FetchCommand))]
@@ -39,36 +45,41 @@ namespace GitViewer.Desktop.ViewModels
         SelectableCommit? _selectedCommit;
 
         [ObservableProperty]
-        ObservableCollection<SelectableCommit> _commits = new ObservableCollection<SelectableCommit>();
-
-        IRelayCommand? _fetchCommand, _searchCommand, _deleteCommand, _settingsCommand, _appearanceCommand;
+        ObservableCollection<SelectableCommit> _commits = new();
 
         bool CanFetchOrSearch => !string.IsNullOrEmpty(Owner) && !string.IsNullOrEmpty(Repo) && !string.IsNullOrEmpty(Author);
 
-        public IRelayCommand FetchCommand => _fetchCommand ??= new RelayCommand(async () =>
+        [RelayCommand(CanExecute = nameof(CanFetchOrSearch))]
+        async Task FetchAsync()
         {
 
-        }, () => CanFetchOrSearch);
+        }
 
-        public IRelayCommand SearchCommand => _searchCommand ??= new RelayCommand(async () =>
+        [RelayCommand(CanExecute = nameof(CanFetchOrSearch))]
+        async Task SearchAsync()
         {
 
-        }, () => CanFetchOrSearch);
+        }
 
-        public IRelayCommand DeleteCommand => _deleteCommand ??= new RelayCommand(async () =>
+        [RelayCommand]
+        async Task DeleteAsync()
         {
 
-        });
+        }
 
-        public IRelayCommand SettingsCommand => _settingsCommand ??= new RelayCommand(() =>
+        [RelayCommand]
+        void Settings()
         {
             var dialog = new SettingsWindow();
             if (dialog.ShowDialog() ?? false)
             {
                 var result = dialog.GetUserInput();
             }
-        });
+        }
 
-        public IRelayCommand AppearanceCommand => _appearanceCommand ??= new RelayCommand(() => new AppearanceWindow().ShowDialog());
+        partial void OnIsDarkChanged(bool value)
+        {
+            ResourceLocator.SetColorScheme(Application.Current.Resources, value ? ResourceLocator.DarkColorScheme : ResourceLocator.LightColorScheme);
+        }
     }
 }
